@@ -43,24 +43,20 @@
       box-sizing: border-box;
     }
 
-    html {
-      width: 100%;
-      height: 100%;
-    }
-
-    body {
+    /* === LA SOLUCIÓN NUCLEAR === */
+    html, body {
       margin: 0;
       padding: 0;
       width: 100%;
-      height: 100vh;
-      height: 100svh;
-      height: 100dvh;
+      height: 100%;
+      position: fixed; /* Ancla la app a las 4 esquinas físicas */
+      top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden; /* Prohíbe cualquier scroll */
       background-color: var(--bg-primary);
       color: var(--text-main);
       font-family: system-ui, -apple-system, sans-serif;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
@@ -195,20 +191,16 @@
     /* PANTALLA DE JUEGO */
     #screen-game {
       display: none;
-      flex: 1 1 auto;
       flex-direction: column;
-      height: auto;
-      min-height: 0;
       width: 100%;
+      height: 100%; /* Se adapta estrictamente al body fijado */
       padding: 0.5rem;
-      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); 
       box-sizing: border-box;
-      position: relative;
-      overflow: hidden;
     }
 
     .game-header {
-      flex: 0 0 auto;
+      flex-shrink: 0; /* Prohíbe que el header se aplaste */
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -235,8 +227,8 @@
     }
 
     .problem-container {
-      flex: 1 1 0;
-      min-height: 0;
+      flex: 1; /* Ocupa el espacio sobrante... */
+      min-height: 0; /* ...pero NUNCA empuja a los demás elementos */
       transform: translateY(-3vh);
       display: flex;
       align-items: center;
@@ -269,12 +261,11 @@
 
     /* BURBUJAS DE OPCIONES */
     .options-grid {
+      flex-shrink: 0; /* PROHÍBE que los botones sean empujados o aplastados */
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.6rem;
       padding: 0.5rem;
-      margin: 0 0 24px 0;
-      flex: 0 0 auto;
       width: 100%;
     }
     .option-btn {
