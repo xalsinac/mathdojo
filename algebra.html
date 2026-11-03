@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>
+    if (localStorage.getItem('mathlab_theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sensei del Álgebra | MATH LAB</title>
+  
+  <meta name="theme-color" content="#0b1120">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Álgebra">
+  <link rel="manifest" href="manifest.json">
+  
+  <style>
+    /* ================= VARIABLES DE COLOR ================= */
+    :root {
+      --bg-primary: #0b1120;
+      --bg-card: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --accent-main: #a855f7; 
+      --accent-gold: #fbbf24;
+      --accent-success: #10b981;
+      --accent-op: #f43f5e;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --accent-main: #9333ea;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .theme-toggle-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      cursor: pointer;
+      padding: 0.6rem 0.8rem;
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      color: var(--text-main);
+      z-index: 100;
+      transition: all 0.2s;
+    }
+
+    /* PANTALLA DE INICIO */
+    #screen-home {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+    .app-logo {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 4px 15px rgba(168, 85, 247, 0.4));
+    }
+    .app-title {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 0 0 0.5rem 0;
+      line-height: 1.1;
+    }
+    .app-subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .levels-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .mode-btn {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      transition: transform 0.1s;
+    }
+    .mode-btn:active { transform: scale(0.96); }
+    
+    /* Colores de Cinturones */
+    .btn-blanco { background: rgba(248, 250, 252, 0.1); border-color: #cbd5e1; color: #f8fafc; }
+    [data-theme="light"] .btn-blanco { background: #f1f5f9; color: #334155; border-color: #94a3b8; }
+    
+    .btn-naranja { background: rgba(249, 115, 22, 0.15); border-color: #f97316; color: #f97316; }
+    .btn-azul { background: rgba(56, 189, 248, 0.15); border-color: #38bdf8; color: #38bdf8; }
+    .btn-negro { background: rgba(15, 23, 42, 0.8); border-color: #64748b; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    [data-theme="light"] .btn-negro { background: #0f172a; color: #fff; }
+
+    .btn-desc { font-size: 0.8rem; font-weight: 600; opacity: 0.85; }
+
+    /* PANTALLA DE JUEGO */
+    #screen-game {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      padding: 1rem;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 4rem 0.5rem 0.5rem;
+    }
+    .btn-back {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.5rem 0.8rem;
+      font-weight: bold;
+    }
+    .score-board {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-success);
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .problem-container {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(2.5rem, 10vw, 5rem);
+      font-weight: 900;
+      font-family: monospace;
+      letter-spacing: -1px;
+      text-align: center;
+      padding: 0.5rem;
+      color: var(--text-main);
+      position: relative;
+      white-space: nowrap; 
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    #problem-display.long-math { font-size: clamp(1.5rem, 6vw, 3rem); }
+    #problem-display.frac-math { font-size: clamp(2rem, 8vw, 4rem); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem; }
+    
+    .frac-line { width: 100%; height: 4px; background: currentColor; border-radius: 2px; }
+
+    sup { 
+      font-size: 0.65em; 
+      position: relative; 
+      top: -0.6em; 
+      color: var(--accent-main); 
+    }
+        [data-theme="light"] sup { color: var(--accent-main); }
+
+    /* BURBUJAS DE OPCIONES */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .option-btn {
+      font-size: clamp(1.2rem, 5vw, 1.8rem);
+      font-weight: 900;
+      font-family: monospace;
+      padding: 1.5rem 0.2rem;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      text-align: center;
+    }
+    .option-btn:active { transform: scale(0.95); }
+    
+    .opt-c1 { background: rgba(168, 85, 247, 0.1); border: 2px solid var(--accent-main); }
+    .opt-c2 { background: rgba(244, 63, 94, 0.1); border: 2px solid #f43f5e; }
+    .opt-c3 { background: rgba(56, 189, 248, 0.1); border: 2px solid #38bdf8; }
+    .opt-c4 { background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; }
+
+    .option-btn.correct { background: var(--accent-success) !important; border-color: var(--accent-success) !important; color: #022c22 !important; box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); }
+    .option-btn.correct sup { color: #022c22 !important; }
+    .option-btn.wrong { background: var(--accent-op) !important; border-color: var(--accent-op) !important; color: #fff !important; box-shadow: 0 0 25px rgba(244, 63, 94, 0.6); }
+    .option-btn.wrong sup { color: #fff !important; }
+    .option-btn.disabled { pointer-events: none; opacity: 0.25; transform: scale(0.95); }
+
+    .success-anim {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 6rem;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      z-index: 100;
+    }
+    .success-anim.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+    /* TARJETA DE EXPLICACIÓN */
+    #feedback-panel {
+      position: fixed;
+      bottom: -150%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      max-width: 450px;
+      background: var(--bg-card);
+      border: 3px solid #f43f5e;
+      padding: 1.5rem;
+      box-sizing: border-box;
+      border-radius: 20px;
+      transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 50;
+      box-shadow: 0 15px 40px rgba(244, 63, 94, 0.4);
+    }
+    #feedback-panel.show { bottom: 20px; }
+    
+    .feedback-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 0.8rem; color: #f43f5e; display: flex; align-items: center; gap: 0.5rem; }
+    .feedback-text { font-size: 1.1rem; line-height: 1.4; color: var(--text-main); margin-bottom: 1.5rem; }
+    .feedback-text strong { color: var(--accent-main); }
+    [data-theme="light"] .feedback-text strong { color: #7e22ce; }
+
+    .btn-next {
+      width: 100%;
+      padding: 1rem;
+      background: #f43f5e;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">
+    <span id="theme-icon">☀️</span>
+  </button>
+
+  <div id="screen-home">
+    <div class="app-logo">🥋</div>
+    <h1 class="app-title">Sensei del Álgebra</h1>
+    <p class="app-subtitle">Escala los 4 niveles del Dojo</p>
+
+    <div class="levels-grid">
+      <button class="mode-btn btn-blanco" onclick="startGame('blanco')">
+        Cinturón Blanco
+        <span class="btn-desc">Operaciones básicas: x + x, 2x · x</span>
+      </button>
+      <button class="mode-btn btn-naranja" onclick="startGame('naranja')">
+        Cinturón Naranja
+        <span class="btn-desc">Variables mixtas y trampas: x² + x, xy</span>
+      </button>
+      <button class="mode-btn btn-azul" onclick="startGame('azul')">
+        Cinturón Azul
+        <span class="btn-desc">Exponentes avanzados: (2x)², 6x³ : 2x</span>
+      </button>
+      <button class="mode-btn btn-negro" onclick="startGame('negro')">
+        Cinturón Negro
+        <span class="btn-desc">Simplificar fracciones y ops. largas</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="screen-game">
+    <div class="game-header">
+      <button class="btn-back" onclick="goHome()">← Salir</button>
+      <div class="score-board">Racha: <span id="score-count">0</span> 🔥</div>
+    </div>
+
+    <div class="problem-container">
+      <div id="problem-display"></div>
+      <div id="success-anim" class="success-anim">✨✅✨</div>
+    </div>
+
+    <div class="options-grid" id="options-container">
+      <button class="option-btn opt-c1" onclick="checkAnswer(0)" id="opt-0"></button>
+      <button class="option-btn opt-c2" onclick="checkAnswer(1)" id="opt-1"></button>
+      <button class="option-btn opt-c3" onclick="checkAnswer(2)" id="opt-2"></button>
+      <button class="option-btn opt-c4" onclick="checkAnswer(3)" id="opt-3"></button>
+    </div>
+  </div>
+
+  <div id="feedback-panel">
+    <div class="feedback-title"><span>❌</span> ¡Trampa mental!</div>
+    <div class="feedback-text" id="feedback-desc"></div>
+    <button class="btn-next" onclick="nextProblem()">Entendido ➔</button>
+  </div>
+
+  <script>
+    function initTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
+    }
+    function toggleTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('mathlab_theme', 'dark');
+        document.getElementById('theme-icon').textContent = '☀️';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('mathlab_theme', 'light');
+        document.getElementById('theme-icon').textContent = '🌙';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', initTheme);
+
+    // ================= MOTOR ALGEBRAICO =================
+    let currentMode = '';
+    let currentData = {};
+    let racha = 0;
+    let buttonsDisabled = false;
+
+    function rand(min, max, avoidZero = true) {
+      let val;
+      do {
+        val = Math.floor(Math.random() * (max - min + 1)) + min;
+      } while (avoidZero && val === 0);
+      return val;
+    }
+
+    // Formateador versátil para respuestas (maneja 'x', 'x²', 'xy', expresiones completas)
+    function formatM(coef, vars) {
+      if (coef === 0) return "0";
+      if (coef === 1 && vars !== "") return vars;
+      if (coef === -1 && vars !== "") return `-${vars}`;
+      return `${coef}${vars}`;
+    }
+    function safeParen(str, coef) {
+      return coef < 0 ? `(${str})` : str;
+    }
+
+    // GENERADORES POR NIVEL
+    function generateBlanco() {
+      const op = rand(0, 2, false); 
+      let a = rand(-4, 5, true); let b = rand(-4, 5, true);
+      let q, ans, exp;
+
+      if (op === 0) { // Suma/Resta ax + bx
+        ans = formatM(a + b, "x");
+        q = `${formatM(a, "x")} + ${safeParen(formatM(b, "x"), b)}`;
+        exp = `Es una suma de términos semejantes. Se suman los números (${a} + ${b} = ${a+b}) y <strong>la letra se queda igual.</strong>`;
+      } else { // Mult ax * bx
+        ans = formatM(a * b, "x<sup>2</sup>");
+        q = `${formatM(a, "x")} · ${safeParen(formatM(b, "x"), b)}`;
+        exp = `¡Multiplicación! Se multiplican los números y se suman los exponentes de las letras (x · x = <strong>x²</strong>).`;
+      }
+      return { q, ansStr: ans, exp, type: 'basic' };
+    }
+
+    function generateNaranja() {
+      const op = rand(0, 2, false);
+      let a = rand(2, 5, true); let b = rand(2, 5, true);
+      let q, ans, exp;
+
+      if (op === 0) { // Trampa: ax^2 + bx
+        let sign = rand(0,1,false) ? '+' : '-';
+        ans = `${formatM(a, "x<sup>2</sup>")} ${sign} ${formatM(b, "x")}`;
+        q = ans; // Queda igual
+        exp = `¡Trampa! <strong>No se pueden sumar peras con manzanas.</strong> Un término con x² no se puede juntar con uno con x. La operación se queda igual.`;
+      } else if (op === 1) { // Doble variable: axy + bxy
+        ans = formatM(a + b, "xy");
+        q = `${formatM(a, "xy")} + ${formatM(b, "xy")}`;
+        exp = `Ambos tienen la misma parte literal ("xy"). Sumas los coeficientes y mantienes las letras idénticas.`;
+      } else { // Trampa: axy + bx
+        ans = `${formatM(a, "xy")} + ${formatM(b, "x")}`;
+        q = ans;
+        exp = `¡Trampa! Tienen distintas letras ("xy" y "x"). <strong>No son semejantes</strong>, así que no se pueden sumar.`;
+      }
+      return { q, ansStr: ans, exp, type: 'mixed' };
+    }
+
+    function generateAzul() {
+      const op = rand(0, 1, false); 
+      let q, ans, exp;
+
+      if (op === 0) { // Potencia (ax^n)^2
+        let a = rand(-4, 4, true); let n = rand(1, 3, true);
+        ans = formatM(a * a, `x<sup>${n * 2}</sup>`);
+        q = `(${formatM(a, `x<sup>${n}</sup>`)})<sup>2</sup>`;
+        exp = `El cuadrado afecta a todo: El número al cuadrado (${a}² = ${a*a}) y <strong>el exponente se multiplica por 2</strong>.`;
+      } else { // Mult ax^n * bx^m
+        let a = rand(-4, 4, true); let b = rand(2, 4, true);
+        let n = rand(2, 3, true); let m = rand(1, 2, true);
+        ans = formatM(a * b, `x<sup>${n + m}</sup>`);
+        q = `${formatM(a, `x<sup>${n}</sup>`)} · ${safeParen(formatM(b, `x<sup>${m}</sup>`), b)}`;
+        exp = `Al multiplicar, los números se multiplican normal, pero los exponentes de letras iguales <strong>se SUMAN</strong>.`;
+      }
+      return { q, ansStr: ans, exp, type: 'advanced' };
+    }
+
+    function generateNegro() {
+      const op = rand(0, 1, false);
+      let q, ans, exp;
+
+      if (op === 0) { // Operación larga: ax + bx - cx
+        let a = rand(2, 5, true); let b = rand(2, 5, true); let c = rand(2, 5, true);
+        ans = formatM(a + b - c, "x");
+        q = `${formatM(a, "x")} + ${formatM(b, "x")} - ${formatM(c, "x")}`;
+        exp = `Agrupa paso a paso de izquierda a derecha. Como todos tienen "x", solo es operar los números: ${a} + ${b} - ${c}.`;
+      } else { // Fracción algebraica
+        let d = rand(2, 4, true); let c = d * rand(2, 4, true);
+        let m = rand(1, 2, true); let n = m + rand(1, 2, true);
+        ans = formatM(c / d, `x<sup>${n - m}</sup>`);
+        q = `<div>${formatM(c, `x<sup>${n}</sup>`)}</div><div class="frac-line"></div><div>${formatM(d, `x<sup>${m}</sup>`)}</div>`;
+        exp = `En las fracciones: divide los números grandes (${c} : ${d} = ${c/d}) y <strong>RESTA los exponentes</strong> de las letras.`;
+      }
+      return { q, ansStr: ans, exp, type: 'expert', isFrac: (op === 1) };
+    }
+
+    // Distractores genéricos basados en la respuesta en formato String
+    function getOptionsStr(correctStr, type) {
+      let opts = new Set([correctStr]);
+      
+      // Intentamos extraer coeficientes y letras para crear fallos creíbles
+      let match = correctStr.match(/^(-?\d*)(.*)$/);
+      let coef = match[1] === "" ? 1 : (match[1] === "-" ? -1 : parseInt(match[1]));
+      let vars = match[2];
+
+      if (type === 'mixed') {
+        opts.add(formatM(coef * 2, vars.replace("<sup>2</sup>", ""))); // Fallo trampa
+        opts.add(formatM(coef, vars + "²"));
+        opts.add(formatM(coef+2, "x"));
+      }
+      
+      let attempts = 0;
+      while (opts.size < 4 && attempts < 50) {
+        attempts++;
+        if (opts.size < 2 && coef !== 0) opts.add(formatM(coef * -1, vars));
+        
+        let cErr = coef + rand(-3, 3, true);
+        let vErr = vars;
+        
+        if (vars.includes("<sup>")) {
+          vErr = vars.replace(/\d+/, (m) => parseInt(m) + rand(-1, 2, true));
+        } else if (vars === "x") {
+          vErr = Math.random() > 0.5 ? "x<sup>2</sup>" : "x";
+        }
+
+        opts.add(formatM(cErr === 0 ? 2 : cErr, vErr));
+      }
+      return Array.from(opts).sort(() => Math.random() - 0.5);
+    }
+
+    // ================= CONTROLADORES =================
+    const classColors = ['opt-c1', 'opt-c2', 'opt-c3', 'opt-c4'];
+
+    function startGame(level) {
+      currentMode = level;
+      racha = 0;
+      updateScore();
+      document.getElementById('screen-home').style.display = 'none';
+      document.getElementById('screen-game').style.display = 'flex';
+      nextProblem();
+    }
+
+    function goHome() {
+  window.location.href = 'index.html'; // Te devuelve al Dojo principal
+    }
+
+    function updateScore() {
+      document.getElementById('score-count').textContent = racha;
+    }
+
+    function nextProblem() {
+      document.getElementById('feedback-panel').classList.remove('show');
+      buttonsDisabled = false;
+
+      if (currentMode === 'blanco') currentData = generateBlanco();
+      else if (currentMode === 'naranja') currentData = generateNaranja();
+      else if (currentMode === 'azul') currentData = generateAzul();
+      else currentData = generateNegro();
+      
+      const displayEl = document.getElementById('problem-display');
+      displayEl.innerHTML = currentData.q;
+      
+      // Adaptadores visuales
+      displayEl.className = '';
+      if (currentData.isFrac) displayEl.classList.add('frac-math');
+      else if (currentData.q.length > 13) displayEl.classList.add('long-math');
+
+      const optionsArray = getOptionsStr(currentData.ansStr, currentData.type);
+      currentData.options = optionsArray;
+
+      for (let i = 0; i < 4; i++) {
+        let btn = document.getElementById(`opt-${i}`);
+        btn.innerHTML = optionsArray[i] === "" ? "0" : optionsArray[i]; 
+        btn.className = `option-btn ${classColors[i]}`;
+      }
+    }
+
+    function checkAnswer(btnIndex) {
+      if (buttonsDisabled) return;
+      buttonsDisabled = true;
+
+      const isCorrect = (currentData.options[btnIndex] === currentData.ansStr);
+      
+      for (let i = 0; i < 4; i++) {
+        let btn = document.getElementById(`opt-${i}`);
+        if (currentData.options[i] === currentData.ansStr) btn.classList.add('correct');
+        else if (i === btnIndex && !isCorrect) btn.classList.add('wrong');
+        else btn.classList.add('disabled');
+      }
+
+      if (isCorrect) {
+        racha++;
+        updateScore();
+        const anim = document.getElementById('success-anim');
+        anim.classList.add('show');
+        setTimeout(() => { anim.classList.remove('show'); nextProblem(); }, 1200);
+      } else {
+        racha = 0; 
+        updateScore();
+        document.getElementById('feedback-desc').innerHTML = currentData.exp;
+        setTimeout(() => { document.getElementById('feedback-panel').classList.add('show'); }, 300);
+      }
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Error', err));
+      });
+    }
+  </script>
+</body>
+</html>

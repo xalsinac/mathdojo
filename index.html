@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>
+    if (localStorage.getItem('mathlab_theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Math Dojo | MATH LAB</title>
+  <meta name="theme-color" content="#0b1120">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  
+  <style>
+    :root {
+      --bg-primary: #0b1120;
+      --bg-card: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+    body {
+      margin: 0; padding: 0;
+      background-color: var(--bg-primary); color: var(--text-main);
+      font-family: system-ui, -apple-system, sans-serif;
+      height: 100vh; display: flex; flex-direction: column; align-items: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .theme-toggle-btn {
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: 12px; cursor: pointer; padding: 0.6rem 0.8rem;
+      font-size: 1.2rem; display: inline-flex; color: var(--text-main);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 100;
+    }
+    .header { text-align: center; margin-top: 4rem; margin-bottom: 2rem; }
+    .header h1 { font-size: 2.8rem; margin: 0; font-weight: 900; }
+    .header p { color: var(--text-muted); font-size: 1.1rem; }
+    
+    .games-grid {
+      display: flex; flex-direction: column; gap: 1.5rem;
+      width: 90%; max-width: 350px;
+    }
+    .game-card {
+      background: var(--bg-card); border: 2px solid var(--border-color);
+      border-radius: 20px; padding: 1.5rem; text-decoration: none;
+      display: flex; align-items: center; gap: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      color: var(--text-main);
+    }
+    .game-card:active { transform: scale(0.95); }
+    .game-icon { font-size: 3rem; }
+    .game-info h2 { margin: 0 0 0.2rem 0; font-size: 1.4rem; font-weight: 800; }
+    .game-info p { margin: 0; font-size: 0.9rem; color: var(--text-muted); }
+    
+    /* Colores específicos de cada juego */
+    .card-enteros { border-color: rgba(56, 189, 248, 0.4); }
+    .card-enteros h2 { color: #38bdf8; }
+    .card-algebra { border-color: rgba(168, 85, 247, 0.4); }
+    .card-algebra h2 { color: #a855f7; }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle-btn" onclick="toggleTheme()"><span id="theme-icon">☀️</span></button>
+
+  <div class="header">
+    <h1>⛩️ MATH DOJO</h1>
+    <p>Selecciona tu disciplina</p>
+  </div>
+
+  <div class="games-grid">
+    <a href="signos.html" class="game-card card-enteros">
+      <div class="game-icon">🥷</div>
+      <div class="game-info">
+        <h2>Ninja Signos</h2>
+        <p>Domina los números enteros</p>
+      </div>
+    </a>
+
+    <a href="algebra.html" class="game-card card-algebra">
+      <div class="game-icon">🥋</div>
+      <div class="game-info">
+        <h2>Sensei Álgebra</h2>
+        <p>Domina las letras y exponentes</p>
+      </div>
+    </a>
+  </div>
+
+  <script>
+    function initTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
+    }
+    function toggleTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('mathlab_theme', 'dark');
+        document.getElementById('theme-icon').textContent = '☀️';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('mathlab_theme', 'light');
+        document.getElementById('theme-icon').textContent = '🌙';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', initTheme);
+    
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>
+    // Comprobador instantáneo para evitar parpadeos
+    if (localStorage.getItem('mathlab_theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ninja de los Signos | MATH LAB</title>
+  
+  <meta name="theme-color" content="#0b1120">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Signos">
+  <link rel="manifest" href="manifest.json">
+  
+  <style>
+    /* ================= VARIABLES DE COLOR INDEPENDIENTES ================= */
+    :root {
+      --bg-primary: #0b1120;
+      --bg-card: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --accent-blue: #38bdf8;
+      --accent-gold: #fbbf24;
+      --accent-success: #10b981;
+      --accent-op: #f43f5e;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+
+    /* ================= ESTILOS GENERALES ================= */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* BOTÓN DE TEMA */
+    .theme-toggle-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      cursor: pointer;
+      padding: 0.6rem 0.8rem;
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      color: var(--text-main);
+      z-index: 100;
+      transition: all 0.2s;
+    }
+    .theme-toggle-btn:active { transform: scale(0.9); }
+
+    /* PANTALLA DE INICIO */
+    #screen-home {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .app-logo {
+      font-size: 4.5rem;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 4px 10px rgba(56, 189, 248, 0.3));
+    }
+    .app-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 0 0 0.5rem 0;
+      line-height: 1.1;
+    }
+    .app-subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 3rem;
+    }
+
+    .mode-btn {
+      width: 100%;
+      max-width: 320px;
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .mode-btn:active { transform: scale(0.95); }
+    
+    .btn-easy { background: rgba(56, 189, 248, 0.1); border-color: #38bdf8; color: #38bdf8; }
+    .btn-easy:hover { background: #38bdf8; color: #0f172a; }
+    
+    .btn-hard { background: rgba(244, 63, 94, 0.1); border-color: #f43f5e; color: #f43f5e; }
+    .btn-hard:hover { background: #f43f5e; color: #fff; }
+
+    .btn-desc { font-size: 0.85rem; font-weight: 600; opacity: 0.85; }
+
+    /* PANTALLA DE JUEGO */
+    #screen-game {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      padding: 1rem;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 4rem 0.5rem 0.5rem;
+    }
+    .btn-back {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.5rem 0.8rem;
+      font-weight: bold;
+    }
+    .score-board {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-success);
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .problem-container {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(3.2rem, 12vw, 5.5rem);
+      font-weight: 900;
+      font-family: monospace;
+      letter-spacing: -2px;
+      text-align: center;
+      padding: 0.5rem;
+      color: var(--text-main);
+      position: relative;
+      /* ESTO ES LO NUEVO: Evita los saltos de línea */
+      white-space: nowrap; 
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* NUEVA CLASE: Para encoger operaciones combinadas largas */
+    #problem-display.long-math {
+      font-size: clamp(1.4rem, 7vw, 4rem);
+      letter-spacing: -1px;
+    }
+
+    /* BURBUJAS DE OPCIONES */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+    .option-btn {
+      font-size: 2.2rem;
+      font-weight: 900;
+      font-family: monospace;
+      padding: 1.8rem 0;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+    }
+    .option-btn:active { transform: scale(0.92); }
+    
+    .opt-c1 { background: rgba(56, 189, 248, 0.15); border: 3px solid #38bdf8; }
+    .opt-c2 { background: rgba(244, 63, 94, 0.15); border: 3px solid #f43f5e; }
+    .opt-c3 { background: rgba(251, 191, 36, 0.15); border: 3px solid #fbbf24; }
+    .opt-c4 { background: rgba(16, 185, 129, 0.15); border: 3px solid #10b981; }
+
+    .option-btn.correct { background: var(--accent-success) !important; border-color: var(--accent-success) !important; color: #022c22 !important; box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); }
+    .option-btn.wrong { background: var(--accent-op) !important; border-color: var(--accent-op) !important; color: #fff !important; box-shadow: 0 0 25px rgba(244, 63, 94, 0.6); }
+    .option-btn.disabled { pointer-events: none; opacity: 0.25; transform: scale(0.95); }
+
+    /* ANIMACIÓN DE ACIERTO */
+    .success-anim {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 6rem;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      z-index: 100;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+    }
+    .success-anim.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    /* TARJETA DE EXPLICACIÓN (FALLOS) */
+    #feedback-panel {
+      position: fixed;
+      bottom: -150%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      max-width: 450px;
+      background: var(--bg-card);
+      border: 3px solid #f43f5e;
+      padding: 1.5rem;
+      box-sizing: border-box;
+      border-radius: 20px;
+      transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 50;
+      box-shadow: 0 15px 40px rgba(244, 63, 94, 0.3);
+    }
+    #feedback-panel.show { bottom: 20px; }
+    
+    .feedback-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      margin-bottom: 0.8rem;
+      color: #f43f5e;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .feedback-text {
+      font-size: 1.15rem;
+      line-height: 1.5;
+      color: var(--text-main);
+      margin-bottom: 1.5rem;
+    }
+    .feedback-text strong { color: var(--accent-gold); }
+
+    .btn-next {
+      width: 100%;
+      padding: 1rem;
+      background: #f43f5e;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .btn-next:active { transform: scale(0.97); }
+  </style>
+</head>
+<body>
+
+  <!-- BOTÓN GLOBAL DE TEMA -->
+  <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">
+    <span id="theme-icon">☀️</span>
+  </button>
+
+  <div id="screen-home">
+    <div class="app-logo">🥷</div>
+    <h1 class="app-title">Ninja de<br>los Signos</h1>
+    <p class="app-subtitle">Entrena los números enteros</p>
+
+    <button class="mode-btn btn-easy" onclick="startGame('facil')">
+      Cinturón Blanco
+      <span class="btn-desc">Operaciones directas: -2 · (-3)</span>
+    </button>
+
+    <button class="mode-btn btn-hard" onclick="startGame('combinado')">
+      Cinturón Negro
+      <span class="btn-desc">Jerarquía y potencias: 4 - (-2)²</span>
+    </button>
+  </div>
+
+  <div id="screen-game">
+    <div class="game-header">
+      <button class="btn-back" onclick="goHome()">← Salir</button>
+      <div class="score-board">Racha: <span id="score-count">0</span> 🔥</div>
+    </div>
+
+    <div class="problem-container">
+      <span id="problem-display"></span>
+      <div id="success-anim" class="success-anim">✨✅✨</div>
+    </div>
+
+    <div class="options-grid" id="options-container">
+      <button class="option-btn opt-c1" onclick="checkAnswer(0)" id="opt-0"></button>
+      <button class="option-btn opt-c2" onclick="checkAnswer(1)" id="opt-1"></button>
+      <button class="option-btn opt-c3" onclick="checkAnswer(2)" id="opt-2"></button>
+      <button class="option-btn opt-c4" onclick="checkAnswer(3)" id="opt-3"></button>
+    </div>
+  </div>
+
+  <div id="feedback-panel">
+    <div class="feedback-title"><span>❌</span> ¡Cuidado con el signo!</div>
+    <div class="feedback-text" id="feedback-desc"></div>
+    <button class="btn-next" onclick="nextProblem()">Entendido ➔</button>
+  </div>
+
+  <script>
+    // ================= LÓGICA DE TEMA INCORPORADA =================
+    function initTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
+    }
+    
+    function toggleTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('mathlab_theme', 'dark'); // Compartimos clave con Math Lab
+        document.getElementById('theme-icon').textContent = '☀️';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('mathlab_theme', 'light');
+        document.getElementById('theme-icon').textContent = '🌙';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', initTheme);
+
+    // ================= MOTOR DE GENERACIÓN =================
+    let currentMode = '';
+    let currentData = {};
+    let racha = 0;
+    let buttonsDisabled = false;
+
+    function rand(min, max, avoidZero = true) {
+      let val;
+      do {
+        val = Math.floor(Math.random() * (max - min + 1)) + min;
+      } while (avoidZero && val === 0);
+      return val;
+    }
+
+    function fmt(num, needsParen = true) {
+      if (num < 0 && needsParen) return `(${num})`;
+      return num;
+    }
+
+    function generateEasy() {
+      const ops = ['+', '-', '*', '/'];
+      const op = ops[Math.floor(Math.random() * ops.length)];
+      let a = rand(-10, 10, true);
+      let b = rand(-10, 10, true);
+      let res, text, exp;
+
+      if (op === '+') {
+        res = a + b;
+        text = `${a} + ${fmt(b)}`;
+        if (a > 0 && b > 0) exp = `Ambos positivos: sumamos normal.`;
+        else if (a < 0 && b < 0) exp = `Si debes ${Math.abs(a)} y gastas ${Math.abs(b)}, ahora debes ${Math.abs(res)}.<br><strong>Se suman y mantienen el signo negativo.</strong>`;
+        else exp = `Tienen distinto signo: se restan los números y domina el <strong>signo del mayor</strong>.`;
+      } 
+      else if (op === '-') {
+        res = a - b;
+        text = `${a} - ${fmt(b)}`;
+        if (b < 0) exp = `Restar un negativo es lo mismo que sumar: -(-${Math.abs(b)}) se convierte en +${Math.abs(b)}.<br>La operación real es <strong>${a} + ${Math.abs(b)}</strong>.`;
+        else exp = `Restar un positivo. Piensa en dinero: tienes ${a} y te quitan ${b}.`;
+      } 
+      else if (op === '*') {
+        res = a * b;
+        text = `${a} · ${fmt(b)}`;
+        let regla = (Math.sign(a) === Math.sign(b)) ? "<strong>Menos por menos = MÁS.</strong>" : "<strong>Más por menos = MENOS.</strong>";
+        if (a > 0 && b > 0) regla = "<strong>Más por más = MÁS.</strong>";
+        exp = `Primero multiplica los números (${Math.abs(a)} · ${Math.abs(b)} = ${Math.abs(res)}).<br>Luego aplica la regla: ${regla}`;
+      } 
+      else if (op === '/') {
+        let cociente = rand(-9, 9, true);
+        a = cociente * b;
+        res = cociente;
+        text = `${a} : ${fmt(b)}`;
+        let regla = (Math.sign(a) === Math.sign(b)) ? "<strong>Menos entre menos = MÁS.</strong>" : "<strong>Más entre menos = MENOS.</strong>";
+        if (a > 0 && b > 0) regla = "<strong>Más entre más = MÁS.</strong>";
+        exp = `Primero divide los números (${Math.abs(a)} : ${Math.abs(b)} = ${Math.abs(res)}).<br>Luego aplica la regla: ${regla}`;
+      }
+      return { q: text, ans: res, exp: exp };
+    }
+
+    function generateCombined() {
+      let type = rand(1, 4, false);
+      let res, text, exp;
+      let a, b, c;
+
+      if (type === 1) {
+        a = rand(-5, 5, true); b = rand(-4, 4, true); c = rand(-4, 4, true);
+        res = a + (b * c);
+        text = `${a} + ${fmt(b)} · ${fmt(c)}`;
+        exp = `<strong>¡Jerarquía!</strong> Primero la multiplicación: ${fmt(b)} · ${fmt(c)} = ${b*c}.<br>Luego hacemos la suma: <strong>${a} + ${fmt(b*c)} = ${res}</strong>.`;
+      } 
+      else if (type === 2) {
+        a = rand(-5, 5, true); b = rand(-5, 5, true); c = rand(-3, 3, true);
+        res = (a + b) * c;
+        text = `(${a} + ${fmt(b)}) · ${fmt(c)}`;
+        exp = `<strong>¡Paréntesis!</strong> Primero lo de dentro: (${a} + ${fmt(b)}) = ${a+b}.<br>Luego multiplicamos: <strong>${a+b} · ${fmt(c)} = ${res}</strong>.`;
+      }
+      else if (type === 3) {
+        a = rand(-10, 10, true); b = rand(-4, 4, true);
+        res = a - (b * b);
+        text = `${a} - ${fmt(b)}²`;
+        exp = `<strong>¡Jerarquía!</strong> Primero la potencia: ${fmt(b)}² = ${b*b} (siempre positiva).<br>Luego la resta: <strong>${a} - ${b*b} = ${res}</strong>.`;
+      }
+      else if (type === 4) {
+        a = rand(-10, 10, true); b = rand(-5, 5, true); c = rand(-5, 5, true);
+        res = a - (b - c);
+        text = `${a} - (${b} - ${fmt(c)})`;
+        exp = `<strong>¡Paréntesis!</strong> Primero lo de dentro: (${b} - ${fmt(c)}) = ${b-c}.<br>Luego el menos de delante cambia el signo: <strong>${a} - ${fmt(b-c)} = ${res}</strong>.`;
+      }
+      return { q: text, ans: res, exp: exp };
+    }
+
+    function getOptions(correct) {
+      let opts = new Set([correct]);
+      opts.add(correct * -1); 
+      
+      while (opts.size < 4) {
+        let errorVariation = correct + rand(-4, 4, true);
+        opts.add(errorVariation);
+      }
+      return Array.from(opts).sort(() => Math.random() - 0.5);
+    }
+
+    // ================= CONTROLADORES DE INTERFAZ =================
+    const classColors = ['opt-c1', 'opt-c2', 'opt-c3', 'opt-c4'];
+
+    function startGame(mode) {
+      currentMode = mode;
+      racha = 0;
+      updateScore();
+      document.getElementById('screen-home').style.display = 'none';
+      document.getElementById('screen-game').style.display = 'flex';
+      nextProblem();
+    }
+
+    function goHome() {
+  window.location.href = 'index.html'; // Te devuelve al Dojo principal
+    }
+
+    function updateScore() {
+      document.getElementById('score-count').textContent = racha;
+    }
+
+    function nextProblem() {
+      // 1. Ocultamos paneles y habilitamos botones
+      document.getElementById('feedback-panel').classList.remove('show');
+      buttonsDisabled = false;
+
+      // 2. Generamos la nueva operación ANTES de imprimirla
+      currentData = (currentMode === 'facil') ? generateEasy() : generateCombined();
+      
+      // 3. Pintamos la operación
+      const displayEl = document.getElementById('problem-display');
+      displayEl.innerHTML = currentData.q;
+
+      // 4. Adaptador visual inteligente para operaciones largas
+      if (currentData.q.length > 11) {
+        displayEl.classList.add('long-math');
+      } else {
+        displayEl.classList.remove('long-math');
+      }
+
+      // 5. Asignamos las respuestas a los botones
+      const optionsArray = getOptions(currentData.ans);
+      currentData.options = optionsArray;
+
+      for (let i = 0; i < 4; i++) {
+        let btn = document.getElementById(`opt-${i}`);
+        btn.textContent = optionsArray[i];
+        btn.className = `option-btn ${classColors[i]}`;
+      }
+    }
+
+    function checkAnswer(btnIndex) {
+      if (buttonsDisabled) return;
+      buttonsDisabled = true;
+
+      const selectedValue = currentData.options[btnIndex];
+      const isCorrect = (selectedValue === currentData.ans);
+      
+      for (let i = 0; i < 4; i++) {
+        let btn = document.getElementById(`opt-${i}`);
+        if (currentData.options[i] === currentData.ans) {
+          btn.classList.add('correct');
+        } else if (i === btnIndex && !isCorrect) {
+          btn.classList.add('wrong');
+        } else {
+          btn.classList.add('disabled');
+        }
+      }
+
+      if (isCorrect) {
+        racha++;
+        updateScore();
+        
+        const anim = document.getElementById('success-anim');
+        anim.classList.add('show');
+        
+        setTimeout(() => {
+          anim.classList.remove('show');
+          nextProblem();
+        }, 1200);
+        
+      } else {
+        racha = 0; 
+        updateScore();
+        
+        document.getElementById('feedback-desc').innerHTML = currentData.exp;
+        setTimeout(() => {
+          document.getElementById('feedback-panel').classList.add('show');
+        }, 300);
+      }
+    }
+
+    // Registro del SW
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('Fallo al registrar SW', err));
+      });
+    }
+  </script>
+</body>
+</html>
