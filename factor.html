@@ -1,0 +1,668 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+if (localStorage.getItem('mathlab_theme') === 'light') {
+  document.documentElement.setAttribute('data-theme', 'light');
+}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Maestro del Factor | MATH LAB</title>
+<meta name="theme-color" content="#0b1120">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Factor">
+<link rel="manifest" href="manifest.json">
+
+<style>
+:root {
+  --bg-primary:#0b1120;
+  --bg-card:#0f172a;
+  --text-main:#f8fafc;
+  --text-muted:#94a3b8;
+  --border-color:#1e293b;
+  --accent-main:#0ea5e9;
+  --accent-gold:#fbbf24;
+  --accent-success:#10b981;
+  --accent-op:#f43f5e;
+}
+[data-theme="light"] {
+  --bg-primary:#f8fafc;
+  --bg-card:#ffffff;
+  --text-main:#0f172a;
+  --text-muted:#64748b;
+  --border-color:#e2e8f0;
+  --accent-main:#0284c7;
+}
+* { box-sizing:border-box; }
+
+html,body {
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  overflow:hidden;
+  background:var(--bg-primary);
+  color:var(--text-main);
+  font-family:system-ui,-apple-system,sans-serif;
+  display:flex;
+  flex-direction:column;
+  transition:background-color .3s,color .3s;
+}
+
+@keyframes screenFlash {
+  0% { box-shadow:inset 0 0 120px rgba(16,185,129,.4); }
+  100% { box-shadow:inset 0 0 0 transparent; }
+}
+body.flash-active { animation:screenFlash .6s ease-out; }
+
+@keyframes errorFlash {
+  0% { box-shadow:inset 0 0 150px rgba(244,63,94,.5); }
+  100% { box-shadow:inset 0 0 0 transparent; }
+}
+body.error-active { animation:errorFlash .5s ease-out; }
+
+@keyframes textPop {
+  0% { transform:scale(1) translateY(-3vh); }
+  40% { transform:scale(1.2) translateY(-3vh); color:var(--accent-success); }
+  100% { transform:scale(1) translateY(-3vh); }
+}
+.pop-active { animation:textPop .5s cubic-bezier(.175,.885,.32,1.275); }
+
+@keyframes textShake {
+  0%,100% { transform:translateX(0) translateY(-3vh); }
+  20%,60% { transform:translateX(-10px) translateY(-3vh); color:var(--accent-op); }
+  40%,80% { transform:translateX(10px) translateY(-3vh); color:var(--accent-op); }
+}
+.shake-active { animation:textShake .4s ease-in-out; }
+
+.particle {
+  position:fixed;
+  pointer-events:none;
+  font-size:2rem;
+  z-index:999;
+  transition:transform .8s cubic-bezier(.25,1,.5,1),opacity .8s;
+}
+
+.theme-toggle-btn {
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-radius:12px;
+  cursor:pointer;
+  padding:.6rem .8rem;
+  font-size:1.2rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);
+  color:var(--text-main);
+  z-index:100;
+}
+
+#screen-home {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  padding:1.5rem;
+  text-align:center;
+  position:relative;
+}
+.app-logo { font-size:4rem;margin-bottom:.5rem; }
+.app-title {
+  font-size:2rem;
+  font-weight:900;
+  margin:0 0 .5rem;
+  line-height:1.1;
+}
+.app-subtitle {
+  color:var(--text-muted);
+  font-size:1rem;
+  margin-bottom:1.5rem;
+}
+.levels-grid {
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+  width:100%;
+  max-width:340px;
+}
+.mode-btn {
+  width:100%;
+  padding:1rem;
+  border-radius:16px;
+  border:2px solid transparent;
+  font-size:1.1rem;
+  font-weight:800;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.2rem;
+}
+.mode-btn:active { transform:scale(.96); }
+
+.btn-blanco { background:rgba(248,250,252,.1);border-color:#cbd5e1;color:#f8fafc; }
+[data-theme="light"] .btn-blanco { background:#f1f5f9;color:#334155;border-color:#94a3b8; }
+.btn-naranja { background:rgba(249,115,22,.15);border-color:#f97316;color:#f97316; }
+.btn-azul { background:rgba(56,189,248,.15);border-color:#38bdf8;color:#38bdf8; }
+.btn-negro { background:rgba(15,23,42,.8);border-color:#64748b;color:#fff;box-shadow:0 4px 15px rgba(0,0,0,.5); }
+[data-theme="light"] .btn-negro { background:#0f172a;color:#fff; }
+.btn-desc { font-size:.8rem;font-weight:600;opacity:.85; }
+
+#screen-game {
+  display:none;
+  flex-direction:column;
+  width:100%;
+  height:100%;
+  position:absolute;
+  inset:0;
+  padding:0;
+}
+.game-header {
+  flex-shrink:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1rem 4rem 1rem 1rem;
+  padding-top:max(1rem,env(safe-area-inset-top));
+}
+.btn-back {
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-radius:10px;
+  color:var(--text-main);
+  font-size:1.1rem;
+  cursor:pointer;
+  padding:.5rem .8rem;
+  font-weight:bold;
+}
+.score-board {
+  background:rgba(16,185,129,.15);
+  color:var(--accent-success);
+  padding:.6rem 1.2rem;
+  border-radius:20px;
+  font-weight:900;
+  font-size:1.1rem;
+  border:1px solid rgba(16,185,129,.3);
+}
+.problem-container {
+  flex:1;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:clamp(2rem,8vw,4rem);
+  font-weight:900;
+  font-family:monospace;
+  letter-spacing:-1px;
+  text-align:center;
+  color:var(--text-main);
+  white-space:nowrap;
+  width:100%;
+  transform:translateY(-3vh);
+}
+#problem-display.long-math {
+  font-size:clamp(1.1rem,5vw,2.5rem);
+  letter-spacing:-1px;
+}
+sup {
+  font-size:.65em;
+  position:relative;
+  top:-.6em;
+  color:var(--accent-main);
+}
+.options-grid {
+  flex-shrink:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.6rem;
+  padding:.5rem;
+  width:100%;
+  padding-bottom:max(1.5rem,env(safe-area-inset-bottom));
+}
+.option-btn {
+  font-size:clamp(.85rem,3.5vw,1.4rem);
+  font-weight:900;
+  font-family:monospace;
+  padding:1.2rem .2rem;
+  border-radius:16px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--text-main);
+  text-align:center;
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+.option-btn:active { transform:scale(.95); }
+.opt-c1 { background:rgba(14,165,233,.1);border:2px solid var(--accent-main); }
+.opt-c2 { background:rgba(244,63,94,.1);border:2px solid #f43f5e; }
+.opt-c3 { background:rgba(249,115,22,.1);border:2px solid #f97316; }
+.opt-c4 { background:rgba(16,185,129,.1);border:2px solid #10b981; }
+
+.option-btn.correct { background:var(--accent-success)!important;border-color:var(--accent-success)!important;color:#022c22!important; }
+.option-btn.correct sup { color:#022c22!important; }
+.option-btn.wrong { background:var(--accent-op)!important;border-color:var(--accent-op)!important;color:#fff!important; }
+.option-btn.wrong sup { color:#fff!important; }
+.option-btn.disabled { pointer-events:none;opacity:.25;transform:scale(.95); }
+
+#feedback-panel {
+  position:fixed;
+  bottom:-150%;
+  left:50%;
+  transform:translateX(-50%);
+  width:92%;
+  max-width:450px;
+  background:var(--bg-card);
+  border:3px solid #f43f5e;
+  padding:1.5rem;
+  border-radius:20px;
+  transition:bottom .4s cubic-bezier(.175,.885,.32,1.275);
+  z-index:50;
+  box-shadow:0 15px 40px rgba(244,63,94,.4);
+}
+#feedback-panel.show { bottom:max(20px,env(safe-area-inset-bottom)); }
+.feedback-title {
+  font-size:1.3rem;
+  font-weight:900;
+  margin-bottom:.8rem;
+  color:#f43f5e;
+}
+.feedback-text {
+  font-size:1.1rem;
+  line-height:1.4;
+  color:var(--text-main);
+  margin-bottom:1.5rem;
+}
+.feedback-text strong { color:var(--accent-main); }
+[data-theme="light"] .feedback-text strong { color:#0284c7; }
+.btn-next {
+  width:100%;
+  padding:1rem;
+  background:#f43f5e;
+  color:#fff;
+  border:0;
+  border-radius:12px;
+  font-size:1.1rem;
+  font-weight:900;
+  cursor:pointer;
+  text-transform:uppercase;
+}
+
+@media(max-height:650px) {
+  #screen-home { padding:.5rem; }
+  .app-logo { font-size:2.5rem;margin:0; }
+  .app-title { font-size:1.6rem; }
+  .app-subtitle { margin-bottom:.7rem; }
+  .levels-grid { gap:.45rem; }
+  .mode-btn { padding:.65rem;font-size:1rem; }
+  .btn-desc { font-size:.7rem; }
+  .option-btn { padding:.8rem .2rem; }
+}
+</style>
+</head>
+
+<body>
+<button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()">
+<span id="theme-icon">☀️</span>
+</button>
+
+<div id="screen-home">
+  <div class="app-logo">🧩</div>
+  <h1 class="app-title">Maestro del Factor</h1>
+  <p class="app-subtitle">Domina la Extracción Común</p>
+
+  <div class="levels-grid">
+    <button class="mode-btn btn-blanco" onclick="startGame('blanco')">
+      Cinturón Blanco
+      <span class="btn-desc">Solo número o letra: 2x + 4</span>
+    </button>
+    <button class="mode-btn btn-naranja" onclick="startGame('naranja')">
+      Cinturón Naranja
+      <span class="btn-desc">Número y letra, incluida la trampa del 1</span>
+    </button>
+    <button class="mode-btn btn-azul" onclick="startGame('azul')">
+      Cinturón Azul
+      <span class="btn-desc">Polinomios completos de 3 términos</span>
+    </button>
+    <button class="mode-btn btn-negro" onclick="startGame('negro')">
+      Cinturón Negro
+      <span class="btn-desc">Varias letras y exponentes: x²yz³</span>
+    </button>
+  </div>
+</div>
+
+<div id="screen-game">
+  <div class="game-header">
+    <button class="btn-back" onclick="goHome()">← Salir</button>
+    <div class="score-board">Racha: <span id="score-count">0</span> 🔥</div>
+  </div>
+
+  <div class="problem-container">
+    <div id="problem-display"></div>
+  </div>
+
+  <div class="options-grid">
+    <button class="option-btn opt-c1" onclick="checkAnswer(0)" id="opt-0"></button>
+    <button class="option-btn opt-c2" onclick="checkAnswer(1)" id="opt-1"></button>
+    <button class="option-btn opt-c3" onclick="checkAnswer(2)" id="opt-2"></button>
+    <button class="option-btn opt-c4" onclick="checkAnswer(3)" id="opt-3"></button>
+  </div>
+</div>
+
+<div id="feedback-panel">
+  <div class="feedback-title">❌ ¡Factorización fallida!</div>
+  <div class="feedback-text" id="feedback-desc"></div>
+  <button class="btn-next" onclick="nextProblem()">Entendido ➔</button>
+</div>
+
+<script>
+function initTheme() {
+  const light = document.documentElement.getAttribute('data-theme') === 'light';
+  document.getElementById('theme-icon').textContent = light ? '🌙' : '☀️';
+}
+function toggleTheme() {
+  const light = document.documentElement.getAttribute('data-theme') === 'light';
+  if(light) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('mathlab_theme','dark');
+  } else {
+    document.documentElement.setAttribute('data-theme','light');
+    localStorage.setItem('mathlab_theme','light');
+  }
+  initTheme();
+}
+window.addEventListener('DOMContentLoaded',initTheme);
+
+function createExplosion(x,y) {
+  const emojis=['🧩','💡','✨','🧠','💥','💯'];
+  for(let i=0;i<12;i++) {
+    const p=document.createElement('div');
+    p.className='particle';
+    p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.left=x+'px';
+    p.style.top=y+'px';
+    document.body.appendChild(p);
+    const angle=Math.random()*Math.PI*2;
+    const velocity=60+Math.random()*120;
+    const tx=Math.cos(angle)*velocity;
+    const ty=Math.sin(angle)*velocity;
+    const rot=Math.random()*360;
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        p.style.transform=`translate(${tx}px,${ty}px) rotate(${rot}deg) scale(${Math.random()*.8+.5})`;
+        p.style.opacity='0';
+      });
+    });
+    setTimeout(()=>p.remove(),800);
+  }
+}
+
+let currentMode='';
+let currentData={};
+let racha=0;
+let buttonsDisabled=false;
+const classColors=['opt-c1','opt-c2','opt-c3','opt-c4'];
+
+function rand(min,max) {
+  return Math.floor(Math.random()*(max-min+1))+min;
+}
+function shuffle(array) {
+  for(let i=array.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+  return array;
+}
+function fmtTerm(coef,vars,first=false) {
+  let s=coef===1?'':coef===-1?'-':String(coef);
+  for(let i=0;i<3;i++) {
+    if(vars[i]>0) s+=['x','y','z'][i]+(vars[i]>1?`<sup>${vars[i]}</sup>`:'');
+  }
+  if(!s) s='1';
+  return s;
+}
+function fmtPolynomial(terms) {
+  return terms.map((t,i)=>{
+    const abs=fmtTerm(Math.abs(t.coef),t.vars);
+    if(i===0) return (t.coef<0?'-':'')+abs;
+    return (t.coef<0?' - ':' + ')+abs;
+  }).join('');
+}
+
+// Blanco: solo número O solo letra
+function generateBlanco() {
+  if(rand(1,2)===1) {
+    const k=rand(2,5),a=rand(2,5);
+    return {
+      q:`${k}x + ${k*a}`,
+      ansStr:`${k}(x + ${a})`,
+      opts:[
+        `${k}(x + ${a})`,
+        `${k}(x + ${k*a})`,
+        `x(${k} + ${a})`,
+        `${k}x(1 + ${a})`
+      ],
+      exp:`El factor común es <strong>${k}</strong>. Dividimos cada término por ${k}: ${k}x ÷ ${k} = x y ${k*a} ÷ ${k} = ${a}.`
+    };
+  }
+  const a=rand(2,6);
+  return {
+    q:`x<sup>2</sup> + ${a}x`,
+    ansStr:`x(x + ${a})`,
+    opts:[
+      `x(x + ${a})`,
+      `x(x<sup>2</sup> + ${a})`,
+      `x(1 + ${a})`,
+      `${a}(x<sup>2</sup> + x)`
+    ],
+    exp:`Sacamos una <strong>x</strong>, que es la letra común con menor exponente.`
+  };
+}
+
+// Naranja: factor numérico y literal, incluyendo cociente 1
+function generateNaranja() {
+  const k=rand(2,5);
+  const a=rand(1,5);
+  const b=rand(1,5);
+  const useOne=rand(1,2)===1;
+
+  let A=a,B=b;
+  if(useOne) B=1;
+  else if(A===B) B=(B%5)+1;
+
+  const q=`${k*A}x<sup>2</sup> + ${k*B}x`;
+  const ans=`${k}x(${A}x + ${B})`;
+
+  const opts=[
+    ans,
+    `${k}(${A}x<sup>2</sup> + ${B}x)`,
+    `x(${k*A}x + ${k*B})`,
+    `${k}x(${A}x + ${k*B})`
+  ];
+  return {
+    q,ansStr:ans,opts,
+    exp:useOne
+      ? `¡La trampa del 1! Extraemos <strong>${k}x</strong>. El segundo término es exactamente igual al factor común, así que ${k}x ÷ ${k}x = <strong>1</strong>, no 0.`
+      : `Extraemos el factor común <strong>${k}x</strong>. Dividimos ambos coeficientes por ${k} y reducimos una potencia de x.`
+  };
+}
+
+// Azul: tres términos
+function generateAzul() {
+  const k=rand(2,4);
+  const a=rand(2,5);
+  const b=rand(2,5);
+  const c=rand(1,5);
+  const q=`${k*a}x<sup>3</sup> - ${k*b}x<sup>2</sup> + ${k*c}x`;
+  const ans=`${k}x(${a}x<sup>2</sup> - ${b}x + ${c})`;
+  return {
+    q,ansStr:ans,
+    opts:[
+      ans,
+      `${k}x(${a}x<sup>2</sup> - ${b}x + 0)`,
+      `${k}(${a}x<sup>3</sup> - ${b}x<sup>2</sup> + ${c}x)`,
+      `${k}x(${a}x<sup>2</sup> + ${b}x - ${c})`
+    ],
+    exp:`Extraemos <strong>${k}x</strong>. El signo negativo del segundo término se conserva y el último término queda positivo.`
+  };
+}
+
+// Negro: factor común de varias letras y exponentes
+function generateNegro() {
+  const letters=['x','y','z'];
+  const common=[rand(1,3),rand(1,3),rand(1,3)];
+  const commonCoef=rand(2,4);
+  const count=rand(2,3);
+
+  const terms=[];
+  const quotients=[];
+
+  for(let i=0;i<count;i++) {
+    const coef=rand(1,5);
+    const vars=common.map((v)=>v+rand(0,2));
+    terms.push({
+      coef:commonCoef*coef,
+      vars:vars
+    });
+    quotients.push({
+      coef:coef,
+      vars:vars.map((v,j)=>v-common[j])
+    });
+  }
+
+  // Asegurar que el factor literal sea exactamente el mínimo de los exponentes.
+  // Cada letra debe desaparecer al menos en uno de los cocientes.
+  for(let j=0;j<3;j++) {
+    const index=rand(0,count-1);
+    terms[index].vars[j]=common[j];
+    quotients[index].vars[j]=0;
+  }
+
+  const q=fmtPolynomial(terms);
+  const factor=fmtTerm(commonCoef,common);
+  const inside=fmtPolynomial(quotients);
+  const ans=`${factor}(${inside})`;
+
+  // Distractores: extraer solo el número, olvidar una letra o un exponente.
+  const wrong1=`${commonCoef}(${fmtPolynomial(terms.map(t=>({coef:t.coef/commonCoef,vars:t.vars})))})`;
+
+  const reduced=common.slice();
+  reduced[0]=Math.max(0,reduced[0]-1);
+  const wrong2=`${fmtTerm(commonCoef,reduced)}(${fmtPolynomial(terms.map(t=>({
+    coef:t.coef/commonCoef,
+    vars:t.vars.map((v,j)=>v-reduced[j])
+  })))})`;
+
+  const wrong3=`${factor}(${fmtPolynomial(quotients.map((t,i)=>({
+    coef:t.coef,
+    vars:t.vars.map((v,j)=>v+(i===0&&j===0?1:0))
+  })))})`;
+
+  const opts=shuffle([ans,wrong1,wrong2,wrong3]);
+
+  return {
+    q,ansStr:ans,opts,
+    exp:`Buscamos el máximo factor común. El número común es <strong>${commonCoef}</strong>. Para las letras, tomamos el menor exponente que aparece en todos los términos: <strong>${factor}</strong>. Después dividimos cada monomio por ese factor.`
+  };
+}
+
+function startGame(level) {
+  currentMode=level;
+  racha=0;
+  updateScore();
+  document.getElementById('screen-home').style.display='none';
+  document.getElementById('screen-game').style.display='flex';
+  nextProblem();
+}
+function goHome() {
+  window.location.href='index.html';
+}
+function updateScore() {
+  document.getElementById('score-count').textContent=racha;
+}
+function nextProblem() {
+  document.getElementById('feedback-panel').classList.remove('show');
+  buttonsDisabled=false;
+
+  if(currentMode==='blanco') currentData=generateBlanco();
+  else if(currentMode==='naranja') currentData=generateNaranja();
+  else if(currentMode==='azul') currentData=generateAzul();
+  else currentData=generateNegro();
+
+  const display=document.getElementById('problem-display');
+  display.innerHTML=currentData.q;
+  display.classList.toggle('long-math',currentData.q.length>20);
+
+  const options=shuffle([...currentData.opts]);
+  currentData.optionsMap=options;
+
+  for(let i=0;i<4;i++) {
+    const btn=document.getElementById(`opt-${i}`);
+    btn.innerHTML=options[i];
+    btn.className=`option-btn ${classColors[i]}`;
+  }
+}
+function checkAnswer(index) {
+  if(buttonsDisabled) return;
+  buttonsDisabled=true;
+
+  const correct=currentData.optionsMap[index]===currentData.ansStr;
+
+  for(let i=0;i<4;i++) {
+    const btn=document.getElementById(`opt-${i}`);
+    if(currentData.optionsMap[i]===currentData.ansStr) btn.classList.add('correct');
+    else if(i===index&&!correct) btn.classList.add('wrong');
+    else btn.classList.add('disabled');
+  }
+
+  if(correct) {
+    racha++;
+    updateScore();
+    const rect=document.getElementById(`opt-${index}`).getBoundingClientRect();
+    createExplosion(rect.left+rect.width/2,rect.top+rect.height/2);
+    document.body.classList.add('flash-active');
+    document.getElementById('problem-display').classList.add('pop-active');
+
+    setTimeout(()=>{
+      document.body.classList.remove('flash-active');
+      document.getElementById('problem-display').classList.remove('pop-active');
+    },600);
+    setTimeout(nextProblem,800);
+  } else {
+    racha=0;
+    updateScore();
+    document.body.classList.add('error-active');
+    document.getElementById('problem-display').classList.add('shake-active');
+
+    setTimeout(()=>{
+      document.body.classList.remove('error-active');
+      document.getElementById('problem-display').classList.remove('shake-active');
+    },500);
+
+    document.getElementById('feedback-desc').innerHTML=currentData.exp;
+    setTimeout(()=>{
+      document.getElementById('feedback-panel').classList.add('show');
+    },300);
+  }
+}
+
+if('serviceWorker' in navigator) {
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js')
+      .catch(err=>console.log('SW Error',err));
+  });
+}
+</script>
+</body>
+</html>
