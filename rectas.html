@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>
+    if (localStorage.getItem('mathlab_theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Dragón de las Rectas | MATH LAB</title>
+  
+  <meta name="theme-color" content="#0b1120">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Rectas">
+  <link rel="manifest" href="manifest.json">
+  
+  <style>
+    /* ================= VARIABLES DE COLOR ================= */
+    :root {
+      --bg-primary: #0b1120;
+      --bg-card: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --accent-main: #10b981; /* Verde Dragón */
+      --accent-gold: #fbbf24;
+      --accent-success: #10b981;
+      --accent-op: #f43f5e;
+      --grid-line: #1e293b;
+      --axis-line: #94a3b8;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --accent-main: #059669;
+      --grid-line: #e2e8f0;
+      --axis-line: #475569;
+    }
+
+    * { box-sizing: border-box; }
+
+    /* === ARQUITECTURA FIJA === */
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+      background-color: var(--bg-primary); color: var(--text-main);
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex; flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* EFECTOS PANTALLA COMPLETA */
+    @keyframes screenFlash {
+      0% { box-shadow: inset 0 0 120px rgba(16, 185, 129, 0.4); }
+      100% { box-shadow: inset 0 0 0px rgba(16, 185, 129, 0); }
+    }
+    body.flash-active { animation: screenFlash 0.6s ease-out; }
+
+    @keyframes errorFlash {
+      0% { box-shadow: inset 0 0 150px rgba(244, 63, 94, 0.5); }
+      100% { box-shadow: inset 0 0 0px rgba(244, 63, 94, 0); }
+    }
+    body.error-active { animation: errorFlash 0.5s ease-out; }
+
+    /* ANIMACIONES DEL TEXTO CENTRAL */
+    @keyframes textPop {
+      0% { transform: scale(1) translateY(-2vh); }
+      40% { transform: scale(1.08) translateY(-2vh); color: var(--accent-success); text-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+      100% { transform: scale(1) translateY(-2vh); }
+    }
+    .pop-active { animation: textPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+    @keyframes textShake {
+      0%, 100% { transform: translateX(0) translateY(-2vh); }
+      20%, 60% { transform: translateX(-10px) translateY(-2vh); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+      40%, 80% { transform: translateX(10px) translateY(-2vh); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+    }
+    .shake-active { animation: textShake 0.4s ease-in-out; }
+
+    /* PARTÍCULAS */
+    .particle {
+      position: fixed; pointer-events: none; font-size: 2rem; opacity: 1; z-index: 999;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-out;
+    }
+
+    .theme-toggle-btn {
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px;
+      cursor: pointer; padding: 0.6rem 0.8rem; font-size: 1.2rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15); color: var(--text-main); z-index: 100;
+      transition: all 0.2s;
+    }
+
+    /* PANTALLA DE INICIO */
+    #screen-home {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; padding: 1.5rem; text-align: center; position: relative;
+    }
+    .app-logo { font-size: 4rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 15px rgba(16, 185, 129, 0.4)); }
+    .app-title { font-size: 2rem; font-weight: 900; color: var(--text-main); margin: 0 0 0.5rem 0; line-height: 1.1; }
+    .app-subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem; }
+    .levels-grid { display: flex; flex-direction: column; gap: 0.8rem; width: 100%; max-width: 340px; }
+    
+    .mode-btn {
+      width: 100%; padding: 1rem; border-radius: 16px; border: 2px solid transparent;
+      font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; gap: 0.2rem; transition: transform 0.1s;
+    }
+    .mode-btn:active { transform: scale(0.96); }
+    .btn-blanco { background: rgba(248, 250, 252, 0.1); border-color: #cbd5e1; color: #f8fafc; }
+    [data-theme="light"] .btn-blanco { background: #f1f5f9; color: #334155; border-color: #94a3b8; }
+    .btn-naranja { background: rgba(249, 115, 22, 0.15); border-color: #f97316; color: #f97316; }
+    .btn-azul { background: rgba(56, 189, 248, 0.15); border-color: #38bdf8; color: #38bdf8; }
+    .btn-negro { background: rgba(15, 23, 42, 0.8); border-color: #64748b; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    [data-theme="light"] .btn-negro { background: #0f172a; color: #fff; }
+    .btn-desc { font-size: 0.8rem; font-weight: 600; opacity: 0.85; }
+
+    /* PANTALLA DE JUEGO */
+    #screen-game {
+      display: none; flex-direction: column; width: 100%; height: 100%;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 0;
+    }
+
+    .game-header {
+      flex-shrink: 0; display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 4rem 1rem 1rem; padding-top: max(1rem, env(safe-area-inset-top));
+    }
+    .btn-back { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 1.1rem; cursor: pointer; padding: 0.5rem 0.8rem; font-weight: bold; }
+    .score-board { background: rgba(16, 185, 129, 0.15); color: var(--accent-success); padding: 0.6rem 1.2rem; border-radius: 20px; font-weight: 900; font-size: 1.1rem; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    .problem-container {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 0.2rem; width: 100%; transform: translateY(-2vh);
+    }
+    
+    .graph-card {
+      background: var(--bg-card); border: 2px solid var(--border-color);
+      border-radius: 16px; padding: 0.4rem; display: flex; justify-content: center;
+      align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .problem-text {
+      font-size: clamp(1.4rem, 5vw, 2.2rem); font-weight: 900; font-family: monospace;
+      margin-bottom: 0.4rem; color: var(--text-main);
+    }
+
+    /* BURBUJAS DE OPCIONES */
+    .options-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; 
+      padding: 0.5rem; width: 100%; padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+    }
+    .option-btn {
+      font-size: clamp(1.05rem, 4.2vw, 1.45rem); font-weight: 900; font-family: monospace;
+      padding: 1.1rem 0.2rem; border-radius: 16px; cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: flex; align-items: center; justify-content: center; color: var(--text-main); text-align: center;
+    }
+    .option-btn:active { transform: scale(0.95); }
+    
+    .opt-c1 { background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; }
+    .opt-c2 { background: rgba(244, 63, 94, 0.15); border: 2px solid #f43f5e; }
+    .opt-c3 { background: rgba(249, 115, 22, 0.15); border: 2px solid #f97316; }
+    .opt-c4 { background: rgba(56, 189, 248, 0.15); border: 2px solid #38bdf8; }
+
+    .option-btn.correct { background: var(--accent-success) !important; border-color: var(--accent-success) !important; color: #022c22 !important; box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); }
+    .option-btn.wrong { background: var(--accent-op) !important; border-color: var(--accent-op) !important; color: #fff !important; box-shadow: 0 0 25px rgba(244, 63, 94, 0.6); }
+    .option-btn.disabled { pointer-events: none; opacity: 0.25; transform: scale(0.95); }
+
+    /* TARJETA DE EXPLICACIÓN */
+    #feedback-panel {
+      position: fixed; bottom: -150%; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px;
+      background: var(--bg-card); border: 3px solid #f43f5e; padding: 1.5rem; box-sizing: border-box;
+      border-radius: 20px; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 50;
+      box-shadow: 0 15px 40px rgba(244, 63, 94, 0.4);
+    }
+    #feedback-panel.show { bottom: 20px; }
+    
+    .feedback-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 0.8rem; color: #f43f5e; display: flex; align-items: center; gap: 0.5rem; }
+    .feedback-text { font-size: 1.05rem; line-height: 1.4; color: var(--text-main); margin-bottom: 1.5rem; }
+    .feedback-text strong { color: var(--accent-main); }
+    [data-theme="light"] .feedback-text strong { color: #059669; }
+    .btn-next { width: 100%; padding: 1rem; background: #f43f5e; color: #fff; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+
+  <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">
+    <span id="theme-icon">☀️</span>
+  </button>
+
+  <div id="screen-home">
+    <div class="app-logo">🐉</div>
+    <h1 class="app-title">Dragón de las Rectas</h1>
+    <p class="app-subtitle">Domina pendiente ($m$) y corte ($n$)</p>
+
+    <div class="levels-grid">
+      <button class="mode-btn btn-blanco" onclick="startGame('blanco')">
+        Cinturón Blanco
+        <span class="btn-desc">Pendiente directa (origen 0): y = 2x, y = -x</span>
+      </button>
+      <button class="mode-btn btn-naranja" onclick="startGame('naranja')">
+        Cinturón Naranja
+        <span class="btn-desc">Corte con el eje Y ($n$): y = x + 2, y = x - 3</span>
+      </button>
+      <button class="mode-btn btn-azul" onclick="startGame('azul')">
+        Cinturón Azul
+        <span class="btn-desc">Recta general: y = mx + n (trampa de signo)</span>
+      </button>
+      <button class="mode-btn btn-negro" onclick="startGame('negro')">
+        Cinturón Negro
+        <span class="btn-desc">Inversa: de ecuación a parámetros clave</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="screen-game">
+    <div class="game-header">
+      <button class="btn-back" onclick="goHome()">← Salir</button>
+      <div class="score-board">Racha: <span id="score-count">0</span> 🔥</div>
+    </div>
+
+    <div class="problem-container" id="problem-area">
+      <div id="problem-caption" class="problem-text"></div>
+      <div class="graph-card" id="graph-wrapper"></div>
+    </div>
+
+    <div class="options-grid" id="options-container">
+      <button class="option-btn opt-c1" onclick="checkAnswer(0)" id="opt-0"></button>
+      <button class="option-btn opt-c2" onclick="checkAnswer(1)" id="opt-1"></button>
+      <button class="option-btn opt-c3" onclick="checkAnswer(2)" id="opt-2"></button>
+      <button class="option-btn opt-c4" onclick="checkAnswer(3)" id="opt-3"></button>
+    </div>
+  </div>
+
+  <div id="feedback-panel">
+    <div class="feedback-title"><span>❌</span> ¡Rastro de fuego incorrecto!</div>
+    <div class="feedback-text" id="feedback-desc"></div>
+    <button class="btn-next" onclick="nextProblem()">Entendido ➔</button>
+  </div>
+
+  <script>
+    function initTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
+    }
+    function toggleTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('mathlab_theme', 'dark');
+        document.getElementById('theme-icon').textContent = '☀️';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('mathlab_theme', 'light');
+        document.getElementById('theme-icon').textContent = '🌙';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', initTheme);
+
+    function createExplosion(x, y) {
+      const emojis = ['🐉', '✨', '🔥', '📈', '💥', '💯'];
+      for (let i = 0; i < 12; i++) {
+        let p = document.createElement('div');
+        p.className = 'particle';
+        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        document.body.appendChild(p);
+
+        let angle = Math.random() * Math.PI * 2;
+        let velocity = 60 + Math.random() * 120;
+        let tx = Math.cos(angle) * velocity;
+        let ty = Math.sin(angle) * velocity;
+        let rot = Math.random() * 360;
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            p.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(${Math.random() * 0.8 + 0.5})`;
+            p.style.opacity = '0';
+          });
+        });
+
+        setTimeout(() => p.remove(), 800);
+      }
+    }
+
+    let currentMode = '';
+    let currentData = {};
+    let racha = 0;
+    let buttonsDisabled = false;
+
+    function rand(min, max, avoidZero = true) {
+      let val;
+      do {
+        val = Math.floor(Math.random() * (max - min + 1)) + min;
+      } while (avoidZero && val === 0);
+      return val;
+    }
+
+    function formatLineEq(m, n) {
+      let mStr = '';
+      if (m === 1) mStr = 'x';
+      else if (m === -1) mStr = '-x';
+      else mStr = `${m}x`;
+
+      if (n === 0) return `y = ${mStr}`;
+      if (n > 0) return `y = ${mStr} + ${n}`;
+      return `y = ${mStr} - ${Math.abs(n)}`;
+    }
+
+    // Renderiza un plano cartesiano SVG (-5 a +5) centrado
+    function createGraphSVG(m, n) {
+      const size = 200;
+      const range = 5;
+      const step = size / (range * 2);
+      const origin = size / 2;
+
+      let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+
+      // Cuadrícula
+      for (let i = -range; i <= range; i++) {
+        let p = origin + i * step;
+        svg += `<line x1="${p}" y1="0" x2="${p}" y2="${size}" stroke="var(--grid-line)" stroke-width="1"/>`;
+        svg += `<line x1="0" y1="${p}" x2="${size}" y2="${p}" stroke="var(--grid-line)" stroke-width="1"/>`;
+      }
+
+      // Ejes X / Y
+      svg += `<line x1="0" y1="${origin}" x2="${size}" y2="${origin}" stroke="var(--axis-line)" stroke-width="2"/>`;
+      svg += `<line x1="${origin}" y1="0" x2="${origin}" y2="${size}" stroke="var(--axis-line)" stroke-width="2"/>`;
+
+      // Coordenadas extremas de la recta
+      const xA = -range;
+      const yA = m * xA + n;
+      const xB = range;
+      const yB = m * xB + n;
+
+      const pxA = origin + xA * step;
+      const pyA = origin - yA * step;
+      const pxB = origin + xB * step;
+      const pyB = origin - yB * step;
+
+      // Trazo de la recta
+      svg += `<line x1="${pxA}" y1="${pyA}" x2="${pxB}" y2="${pyB}" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>`;
+
+      // Punto destacado en el eje Y (corte n)
+      const pny = origin - n * step;
+      svg += `<circle cx="${origin}" cy="${pny}" r="4.5" fill="#f43f5e" />`;
+
+      svg += `</svg>`;
+      return svg;
+    }
+
+    // Nivel 1: Blanco -> n = 0, solo varía m (+/- 1, 2, 3)
+    function generateBlanco() {
+      const slopes = [1, -1, 2, -2, 3, -3];
+      const m = slopes[rand(0, slopes.length - 1, false)];
+      const n = 0;
+      const ansStr = formatLineEq(m, n);
+
+      const opts = new Set([ansStr]);
+      opts.add(formatLineEq(-m, n)); // Trampa: signo inverso
+      opts.add(formatLineEq(m === 1 ? 2 : 1, n));
+      opts.add(formatLineEq(-m === -1 ? -2 : -1, n));
+      while (opts.size < 4) opts.add(formatLineEq(rand(-3, 3, true), 0));
+
+      const exp = m > 0
+        ? `La recta <strong>crece</strong> (hacia arriba): su pendiente es positiva ($m = +${m}$). Pasa por $(0,0)$, luego $n = 0$.`
+        : `La recta <strong>decrece</strong> (hacia abajo): su pendiente es negativa ($m = ${m}$). Pasa por $(0,0)$, luego $n = 0$.`;
+
+      return {
+        svg: createGraphSVG(m, n),
+        caption: '¿Cuál es la función?',
+        ansStr,
+        exp,
+        opts: Array.from(opts).sort(() => Math.random() - 0.5)
+      };
+    }
+
+    // Nivel 2: Naranja -> m = 1 o -1, varía n
+    function generateNaranja() {
+      const m = Math.random() > 0.5 ? 1 : -1;
+      const n = rand(-3, 3, true);
+      const ansStr = formatLineEq(m, n);
+
+      const opts = new Set([ansStr]);
+      opts.add(formatLineEq(m, -n)); // Trampa: corte con signo cambiado
+      opts.add(formatLineEq(-m, n)); // Trampa: pendiente invertida
+      opts.add(formatLineEq(-m, -n));
+      while (opts.size < 4) opts.add(formatLineEq(m, rand(-4, 4, true)));
+
+      const exp = `Corta al eje vertical en <strong>y = ${n}</strong>, por tanto la ordenada en el origen es $n = ${n}$. Como $m = ${m > 0 ? '+1' : '-1'}$, queda $${ansStr}$.`;
+
+      return {
+        svg: createGraphSVG(m, n),
+        caption: 'Identifica la recta',
+        ansStr,
+        exp,
+        opts: Array.from(opts).sort(() => Math.random() - 0.5)
+      };
+    }
+
+    // Nivel 3: Azul -> Recta completa y = mx + n
+    function generateAzul() {
+      const m = rand(-2, 2, true);
+      const n = rand(-3, 3, true);
+      const ansStr = formatLineEq(m, n);
+
+      const opts = new Set([ansStr]);
+      opts.add(formatLineEq(-m, n)); // Trampa: pendiente de signo opuesto
+      opts.add(formatLineEq(m, -n)); // Trampa: punto de corte invertido
+      // Trampa: cruzar m y n
+      opts.add(formatLineEq(n === 0 ? 1 : n, m));
+      while (opts.size < 4) opts.add(formatLineEq(rand(-3, 3, true), rand(-3, 3, true)));
+
+      const exp = `El punto rojo en el eje vertical marca $n = ${n}$. La inclinación da $m = ${m}$. Ecuación: <strong>${ansStr}</strong>.`;
+
+      return {
+        svg: createGraphSVG(m, n),
+        caption: '¿Qué ecuación representa?',
+        ansStr,
+        exp,
+        opts: Array.from(opts).sort(() => Math.random() - 0.5)
+      };
+    }
+
+    // Nivel 4: Negro -> Inversa: te da la ecuación y pide m o n correcto
+    function generateNegro() {
+      const m = rand(-3, 3, true);
+      const n = rand(-4, 4, true);
+      const eq = formatLineEq(m, n);
+
+      const askSlope = Math.random() > 0.5;
+      let ansStr = '';
+      let opts = new Set();
+      let exp = '';
+
+      if (askSlope) {
+        ansStr = `m = ${m}`;
+        opts.add(ansStr);
+        opts.add(`m = ${-m}`); // Trampa signo
+        opts.add(`m = ${n}`);  // Trampa confundir con ordenada
+        opts.add(`m = ${-n}`);
+        exp = `En $y = mx + n$, la <strong>pendiente $m$</strong> es el número que acompaña a la $x$. Aquí es <strong>m = ${m}</strong>.`;
+      } else {
+        ansStr = `n = ${n}`;
+        opts.add(ansStr);
+        opts.add(`n = ${-n}`); // Trampa signo
+        opts.add(`n = ${m}`);  // Trampa confundir con pendiente
+        opts.add(`n = ${-m}`);
+        exp = `En $y = mx + n$, la <strong>ordenada en el origen $n$</strong> es el término sin $x$. Aquí es <strong>n = ${n}</strong> (corte en el eje Y).`;
+      }
+
+      while (opts.size < 4) opts.add(askSlope ? `m = ${rand(-4, 4)}` : `n = ${rand(-4, 4)}`);
+
+      return {
+        svg: createGraphSVG(m, n),
+        caption: `${eq} ➔ ${askSlope ? '¿Pendiente?' : '¿Corte eje Y?'}`,
+        ansStr,
+        exp,
+        opts: Array.from(opts).sort(() => Math.random() - 0.5)
+      };
+    }
+
+    const classColors = ['opt-c1', 'opt-c2', 'opt-c3', 'opt-c4'];
+
+    function startGame(level) {
+      currentMode = level;
+      racha = 0;
+      updateScore();
+      document.getElementById('screen-home').style.display = 'none';
+      document.getElementById('screen-game').style.display = 'flex';
+      nextProblem();
+    }
+
+    function goHome() { window.location.href = 'index.html'; }
+    function updateScore() { document.getElementById('score-count').textContent = racha; }
+
+    function nextProblem() {
+      document.getElementById('feedback-panel').classList.remove('show');
+      buttonsDisabled = false;
+
+      if (currentMode === 'blanco') currentData = generateBlanco();
+      else if (currentMode === 'naranja') currentData = generateNaranja();
+      else if (currentMode === 'azul') currentData = generateAzul();
+      else currentData = generateNegro();
+
+      document.getElementById('problem-caption').innerHTML = currentData.caption;
+      document.getElementById('graph-wrapper').innerHTML = currentData.svg;
+
+      for (let i = 0; i < 4; i++) {
+        let btn = document.getElementById(`opt-${i}`);
+        btn.innerHTML = currentData.opts[i];
+        btn.className = `option-btn ${classColors[i]}`;
+      }
+    }
+
+    function checkAnswer(btnIndex) {
+      if (buttonsDisabled) return;
+      buttonsDisabled = true;
+
+      const selectedVal = currentData.opts[btnIndex];
+      const isCorrect = (selectedVal === currentData.ansStr);
+
+      for (let i = 0; i < 4; i++) {
+        let btn = document.getElementById(`opt-${i}`);
+        if (currentData.opts[i] === currentData.ansStr) {
+          btn.classList.add('correct');
+        } else if (i === btnIndex && !isCorrect) {
+          btn.classList.add('wrong');
+        } else {
+          btn.classList.add('disabled');
+        }
+      }
+
+      if (isCorrect) {
+        racha++;
+        updateScore();
+
+        const btnElement = document.getElementById(`opt-${btnIndex}`);
+        const rect = btnElement.getBoundingClientRect();
+        createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+        document.body.classList.add('flash-active');
+        document.getElementById('problem-area').classList.add('pop-active');
+
+        setTimeout(() => {
+          document.body.classList.remove('flash-active');
+          document.getElementById('problem-area').classList.remove('pop-active');
+        }, 600);
+
+        setTimeout(() => { nextProblem(); }, 800);
+      } else {
+        racha = 0;
+        updateScore();
+
+        document.body.classList.add('error-active');
+        document.getElementById('problem-area').classList.add('shake-active');
+
+        setTimeout(() => {
+          document.body.classList.remove('error-active');
+          document.getElementById('problem-area').classList.remove('shake-active');
+        }, 500);
+
+        document.getElementById('feedback-desc').innerHTML = currentData.exp;
+        setTimeout(() => { document.getElementById('feedback-panel').classList.add('show'); }, 300);
+      }
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Error', err));
+      });
+    }
+  </script>
+</body>
+</html>

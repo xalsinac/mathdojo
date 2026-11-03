@@ -7,7 +7,7 @@
     }
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Math Dojo | MATH LAB</title>
   <meta name="theme-color" content="#0b1120">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -29,12 +29,18 @@
       --text-muted: #64748b;
       --border-color: #e2e8f0;
     }
+    * { box-sizing: border-box; }
+    
     body {
       margin: 0; padding: 0;
       background-color: var(--bg-primary); color: var(--text-main);
       font-family: system-ui, -apple-system, sans-serif;
-      height: 100vh; display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+      overflow-x: hidden;
+      overflow-y: auto; /* Permite scroll limpio en el menú */
       transition: background-color 0.3s, color 0.3s;
+      padding-bottom: max(2rem, env(safe-area-inset-bottom));
     }
     .theme-toggle-btn {
       position: absolute; top: 1rem; right: 1rem;
@@ -42,28 +48,64 @@
       border-radius: 12px; cursor: pointer; padding: 0.6rem 0.8rem;
       font-size: 1.2rem; display: inline-flex; color: var(--text-main);
       box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 100;
+      transition: transform 0.15s;
     }
-    .header { text-align: center; margin-top: 4rem; margin-bottom: 2rem; }
-    .header h1 { font-size: 2.8rem; margin: 0; font-weight: 900; }
-    .header p { color: var(--text-muted); font-size: 1.1rem; }
+    .theme-toggle-btn:active { transform: scale(0.9); }
+
+    .header {
+      text-align: center;
+      margin-top: max(3rem, env(safe-area-inset-top));
+      margin-bottom: 1.2rem;
+      padding: 0 1rem;
+    }
+    .header h1 { font-size: clamp(2rem, 6vw, 2.8rem); margin: 0; font-weight: 900; letter-spacing: -1px; }
+    .header p { color: var(--text-muted); font-size: 1rem; margin: 0.3rem 0 0 0; }
     
+    /* REJILLA A DOBLE COLUMNA */
     .games-grid {
-      display: flex; flex-direction: column; gap: 1.5rem;
-      width: 90%; max-width: 350px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      width: 94%;
+      max-width: 520px;
     }
     .game-card {
-      background: var(--bg-card); border: 2px solid var(--border-color);
-      border-radius: 20px; padding: 1.5rem; text-decoration: none;
-      display: flex; align-items: center; gap: 1rem;
-      transition: transform 0.2s, box-shadow 0.2s;
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 18px;
+      padding: 1rem 0.6rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: transform 0.15s, box-shadow 0.2s;
       color: var(--text-main);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .game-card:active { transform: scale(0.95); }
-    .game-icon { font-size: 3rem; }
-    .game-info h2 { margin: 0 0 0.2rem 0; font-size: 1.4rem; font-weight: 800; }
-    .game-info p { margin: 0; font-size: 0.9rem; color: var(--text-muted); }
+    .game-icon { font-size: 2.3rem; line-height: 1; }
+    .game-info { width: 100%; }
+    .game-info h2 {
+      margin: 0 0 0.2rem 0;
+      font-size: clamp(0.95rem, 3.2vw, 1.15rem);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .game-info p {
+      margin: 0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
     
-    /* Colores específicos de cada juego */
+    /* Colores temáticos */
     .card-enteros { border-color: rgba(56, 189, 248, 0.4); }
     .card-enteros h2 { color: #38bdf8; }
     .card-algebra { border-color: rgba(168, 85, 247, 0.4); }
@@ -71,7 +113,9 @@
   </style>
 </head>
 <body>
-  <button class="theme-toggle-btn" onclick="toggleTheme()"><span id="theme-icon">☀️</span></button>
+  <button class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">
+    <span id="theme-icon">☀️</span>
+  </button>
 
   <div class="header">
     <h1>⛩️ MATH DOJO</h1>
@@ -83,7 +127,7 @@
       <div class="game-icon">🥷</div>
       <div class="game-info">
         <h2>Ninja Signos</h2>
-        <p>Domina los números enteros</p>
+        <p>Números enteros y jerarquía</p>
       </div>
     </a>
 
@@ -91,7 +135,7 @@
       <div class="game-icon">🥋</div>
       <div class="game-info">
         <h2>Sensei Álgebra</h2>
-        <p>Domina las letras y exponentes</p>
+        <p>Monomios y exponentes</p>
       </div>
     </a>
 
@@ -99,28 +143,47 @@
       <div class="game-icon">⚔️</div>
       <div class="game-info">
         <h2 style="color: #e11d48;">Katana Binomios</h2>
-        <p>Productos notables y factor</p>
+        <p>Productos notables</p>
       </div>
     </a>
 
     <a href="factor.html" class="game-card" style="border-color: rgba(14, 165, 233, 0.4);">
       <div class="game-icon">🧩</div>
       <div class="game-info">
-        <h2 style="color: #0ea5e9;">Maestro del Factor</h2>
-        <p>Extracción y trampa del uno</p>
-      </div>
-    <a href="ronin.html" class="game-card" style="border-color: rgba(14, 165, 233, 0.4);">
-      <div class="game-icon">⚔️</div>
-      <div class="game-info">
-        <h2 style="color: #0ea5e9;">Ronin de las Potencias</h2>
-        <p>Domina las bases y los exponentes</p>
+        <h2 style="color: #0ea5e9;">Maestro Factor</h2>
+        <p>Factor común y la trampa del 1</p>
       </div>
     </a>
+
+    <a href="ronin.html" class="game-card" style="border-color: rgba(236, 72, 153, 0.4);">
+      <div class="game-icon">🗡️</div>
+      <div class="game-info">
+        <h2 style="color: #ec4899;">Ronin Potencias</h2>
+        <p>Bases, exponentes y signos</p>
+      </div>
+    </a>
+
     <a href="balanza.html" class="game-card" style="border-color: rgba(245, 158, 11, 0.4);">
       <div class="game-icon">⚖️</div>
       <div class="game-info">
-        <h2 style="color: #f59e0b;">Balanza del Monje</h2>
+        <h2 style="color: #f59e0b;">Balanza Monje</h2>
         <p>Ecuaciones y transposición</p>
+      </div>
+    </a>
+
+    <a href="fracciones.html" class="game-card" style="border-color: rgba(6, 182, 212, 0.4);">
+      <div class="game-icon">💠</div>
+      <div class="game-info">
+        <h2 style="color: #06b6d4;">Shuriken Fracciones</h2>
+        <p>Operaciones racionales</p>
+      </div>
+    </a>
+
+    <a href="rectas.html" class="game-card" style="border-color: rgba(16, 185, 129, 0.4);">
+      <div class="game-icon">🐉</div>
+      <div class="game-info">
+        <h2 style="color: #10b981;">Dragón Rectas</h2>
+        <p>Pendiente y ordenada en origen</p>
       </div>
     </a>
   </div>

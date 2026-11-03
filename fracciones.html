@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>
+    if (localStorage.getItem('mathlab_theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Shuriken de las Fracciones | MATH LAB</title>
+  
+  <meta name="theme-color" content="#0b1120">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Fracciones">
+  <link rel="manifest" href="manifest.json">
+  
+  <style>
+    /* ================= VARIABLES DE COLOR ================= */
+    :root {
+      --bg-primary: #0b1120;
+      --bg-card: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --accent-main: #06b6d4; /* Color Turquesa Shuriken */
+      --accent-gold: #fbbf24;
+      --accent-success: #10b981;
+      --accent-op: #f43f5e;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --accent-main: #0891b2;
+    }
+
+    * { box-sizing: border-box; }
+
+    /* === ARQUITECTURA FIJA === */
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+      background-color: var(--bg-primary); color: var(--text-main);
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex; flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* EFECTOS PANTALLA COMPLETA */
+    @keyframes screenFlash {
+      0% { box-shadow: inset 0 0 120px rgba(16, 185, 129, 0.4); }
+      100% { box-shadow: inset 0 0 0px rgba(16, 185, 129, 0); }
+    }
+    body.flash-active { animation: screenFlash 0.6s ease-out; }
+
+    @keyframes errorFlash {
+      0% { box-shadow: inset 0 0 150px rgba(244, 63, 94, 0.5); }
+      100% { box-shadow: inset 0 0 0px rgba(244, 63, 94, 0); }
+    }
+    body.error-active { animation: errorFlash 0.5s ease-out; }
+
+    /* ANIMACIONES DEL TEXTO CENTRAL */
+    @keyframes textPop {
+      0% { transform: scale(1) translateY(-3vh); }
+      40% { transform: scale(1.15) translateY(-3vh); color: var(--accent-success); text-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+      100% { transform: scale(1) translateY(-3vh); }
+    }
+    .pop-active { animation: textPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+    @keyframes textShake {
+      0%, 100% { transform: translateX(0) translateY(-3vh); }
+      20%, 60% { transform: translateX(-10px) translateY(-3vh); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+      40%, 80% { transform: translateX(10px) translateY(-3vh); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+    }
+    .shake-active { animation: textShake 0.4s ease-in-out; }
+
+    /* PARTÍCULAS */
+    .particle {
+      position: fixed; pointer-events: none; font-size: 2rem; opacity: 1; z-index: 999;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-out;
+    }
+
+    .theme-toggle-btn {
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px;
+      cursor: pointer; padding: 0.6rem 0.8rem; font-size: 1.2rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15); color: var(--text-main); z-index: 100;
+      transition: all 0.2s;
+    }
+
+    /* PANTALLA DE INICIO */
+    #screen-home {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; padding: 1.5rem; text-align: center; position: relative;
+    }
+    .app-logo { font-size: 4rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 15px rgba(6, 182, 212, 0.4)); }
+    .app-title { font-size: 2rem; font-weight: 900; color: var(--text-main); margin: 0 0 0.5rem 0; line-height: 1.1; }
+    .app-subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem; }
+    .levels-grid { display: flex; flex-direction: column; gap: 0.8rem; width: 100%; max-width: 340px; }
+    
+    .mode-btn {
+      width: 100%; padding: 1rem; border-radius: 16px; border: 2px solid transparent;
+      font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; gap: 0.2rem; transition: transform 0.1s;
+    }
+    .mode-btn:active { transform: scale(0.96); }
+    .btn-blanco { background: rgba(248, 250, 252, 0.1); border-color: #cbd5e1; color: #f8fafc; }
+    [data-theme="light"] .btn-blanco { background: #f1f5f9; color: #334155; border-color: #94a3b8; }
+    .btn-naranja { background: rgba(249, 115, 22, 0.15); border-color: #f97316; color: #f97316; }
+    .btn-azul { background: rgba(56, 189, 248, 0.15); border-color: #38bdf8; color: #38bdf8; }
+    .btn-negro { background: rgba(15, 23, 42, 0.8); border-color: #64748b; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    [data-theme="light"] .btn-negro { background: #0f172a; color: #fff; }
+    .btn-desc { font-size: 0.8rem; font-weight: 600; opacity: 0.85; }
+
+    /* PANTALLA DE JUEGO */
+    #screen-game {
+      display: none; flex-direction: column; width: 100%; height: 100%;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 0;
+    }
+
+    .game-header {
+      flex-shrink: 0; display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 4rem 1rem 1rem; padding-top: max(1rem, env(safe-area-inset-top));
+    }
+    .btn-back { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 1.1rem; cursor: pointer; padding: 0.5rem 0.8rem; font-weight: bold; }
+    .score-board { background: rgba(16, 185, 129, 0.15); color: var(--accent-success); padding: 0.6rem 1.2rem; border-radius: 20px; font-weight: 900; font-size: 1.1rem; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    .problem-container {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      font-size: clamp(2rem, 7vw, 3.2rem); font-weight: 900; font-family: monospace;
+      letter-spacing: -1px; text-align: center; color: var(--text-main);
+      width: 100%; transform: translateY(-3vh);
+    }
+
+    /* RENDERIZADO VISUAL DE FRACCIONES */
+    .frac-view {
+      display: inline-flex; flex-direction: column; vertical-align: middle;
+      text-align: center; padding: 0 0.25rem; font-size: 0.9em;
+    }
+    .frac-top { border-bottom: 3px solid currentColor; padding: 0 0.2rem; }
+    .frac-bottom { padding: 0 0.2rem; }
+    .frac-op { display: inline-flex; align-items: center; margin: 0 0.5rem; }
+
+    /* BURBUJAS DE OPCIONES */
+    .options-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; 
+      padding: 0.5rem; width: 100%; padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+    }
+    .option-btn {
+      font-size: clamp(1.1rem, 4.5vw, 1.5rem); font-weight: 900; font-family: monospace;
+      padding: 1.1rem 0.2rem; border-radius: 16px; cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: flex; align-items: center; justify-content: center; color: var(--text-main); text-align: center;
+    }
+    .option-btn .frac-view { font-size: 0.85em; }
+    .option-btn:active { transform: scale(0.95); }
+    
+    .opt-c1 { background: rgba(6, 182, 212, 0.15); border: 2px solid var(--accent-main); }
+    .opt-c2 { background: rgba(244, 63, 94, 0.15); border: 2px solid #f43f5e; }
+    .opt-c3 { background: rgba(249, 115, 22, 0.15); border: 2px solid #f97316; }
+    .opt-c4 { background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; }
+
+    .option-btn.correct { background: var(--accent-success) !important; border-color: var(--accent-success) !important; color: #022c22 !important; box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); }
+    .option-btn.wrong { background: var(--accent-op) !important; border-color: var(--accent-op) !important; color: #fff !important; box-shadow: 0 0 25px rgba(244, 63, 94, 0.6); }
+    .option-btn.disabled { pointer-events: none; opacity: 0.25; transform: scale(0.95); }
+
+    /* TARJETA DE EXPLICACIÓN */
+    #feedback-panel {
+      position: fixed; bottom: -150%; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px;
+      background: var(--bg-card); border: 3px solid #f43f5e; padding: 1.5rem; box-sizing: border-box;
+      border-radius: 20px; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 50;
+      box-shadow: 0 15px 40px rgba(244, 63, 94, 0.4);
+    }
+    #feedback-panel.show { bottom: 20px; }
+    
+    .feedback-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 0.8rem; color: #f43f5e; display: flex; align-items: center; gap: 0.5rem; }
+    .feedback-text { font-size: 1.1rem; line-height: 1.4; color: var(--text-main); margin-bottom: 1.5rem; }
+    .feedback-text strong { color: var(--accent-main); }
+    [data-theme="light"] .feedback-text strong { color: #0891b2; }
+    .btn-next { width: 100%; padding: 1rem; background: #f43f5e; color: #fff; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+
+  <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">
+    <span id="theme-icon">☀️</span>
+  </button>
+
+  <div id="screen-home">
+    <div class="app-logo">💠</div>
+    <h1 class="app-title">Shuriken de Fracciones</h1>
+    <p class="app-subtitle">Corte limpio a las trampas racionales</p>
+
+    <div class="levels-grid">
+      <button class="mode-btn btn-blanco" onclick="startGame('blanco')">
+        Cinturón Blanco
+        <span class="btn-desc">Mismo denominador: 2/7 + 3/7</span>
+      </button>
+      <button class="mode-btn btn-naranja" onclick="startGame('naranja')">
+        Cinturón Naranja
+        <span class="btn-desc">Suma/Resta ¡Trampa línea recta!: 1/2 + 1/3</span>
+      </button>
+      <button class="mode-btn btn-azul" onclick="startGame('azul')">
+        Cinturón Azul
+        <span class="btn-desc">Multiplicación y División en cruz: 2/3 : 4/5</span>
+      </button>
+      <button class="mode-btn btn-negro" onclick="startGame('negro')">
+        Cinturón Negro
+        <span class="btn-desc">Operaciones combinadas: 1/2 + 1/3 · 2/5</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="screen-game">
+    <div class="game-header">
+      <button class="btn-back" onclick="goHome()">← Salir</button>
+      <div class="score-board">Racha: <span id="score-count">0</span> 🔥</div>
+    </div>
+
+    <div class="problem-container">
+      <div id="problem-display"></div>
+    </div>
+
+    <div class="options-grid" id="options-container">
+      <button class="option-btn opt-c1" onclick="checkAnswer(0)" id="opt-0"></button>
+      <button class="option-btn opt-c2" onclick="checkAnswer(1)" id="opt-1"></button>
+      <button class="option-btn opt-c3" onclick="checkAnswer(2)" id="opt-2"></button>
+      <button class="option-btn opt-c4" onclick="checkAnswer(3)" id="opt-3"></button>
+    </div>
+  </div>
+
+  <div id="feedback-panel">
+    <div class="feedback-title"><span>❌</span> ¡Corte desviado!</div>
+    <div class="feedback-text" id="feedback-desc"></div>
+    <button class="btn-next" onclick="nextProblem()">Entendido ➔</button>
+  </div>
+
+  <script>
+    function initTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
+    }
+    function toggleTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('mathlab_theme', 'dark');
+        document.getElementById('theme-icon').textContent = '☀️';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('mathlab_theme', 'light');
+        document.getElementById('theme-icon').textContent = '🌙';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', initTheme);
+
+    function createExplosion(x, y) {
+      const emojis = ['💠', '✨', '🗡️', '🎯', '💥', '💯'];
+      for (let i = 0; i < 12; i++) {
+        let p = document.createElement('div');
+        p.className = 'particle';
+        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        document.body.appendChild(p);
+
+        let angle = Math.random() * Math.PI * 2;
+        let velocity = 60 + Math.random() * 120;
+        let tx = Math.cos(angle) * velocity;
+        let ty = Math.sin(angle) * velocity;
+        let rot = Math.random() * 360;
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            p.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(${Math.random() * 0.8 + 0.5})`;
+            p.style.opacity = '0';
+          });
+        });
+
+        setTimeout(() => p.remove(), 800);
+      }
+    }
+
+    let currentMode = '';
+    let currentData = {};
+    let racha = 0;
+    let buttonsDisabled = false;
+
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function renderF(n, d) {
+      if (d === 1) return `${n}`;
+      return `<span class="frac-view"><span class="frac-top">${n}</span><span class="frac-bottom">${d}</span></span>`;
+    }
+
+    function gcd(a, b) {
+      a = Math.abs(a); b = Math.abs(b);
+      return b === 0 ? a : gcd(b, a % b);
+    }
+
+    function simplify(n, d) {
+      if (d === 0) return { n: 0, d: 1 };
+      const g = gcd(n, d);
+      return { n: n / g, d: d / g };
+    }
+
+    // Nivel 1: Blanco -> Mismo denominador
+    function generateBlanco() {
+      let d = rand(3, 9);
+      let n1 = rand(1, d - 1);
+      let n2 = rand(1, d - 1);
+      let op = Math.random() > 0.5 ? '+' : '-';
+      
+      if (op === '-' && n1 < n2) { let temp = n1; n1 = n2; n2 = temp; }
+      if (op === '-' && n1 === n2) n1++;
+
+      let correctN = op === '+' ? n1 + n2 : n1 - n2;
+      let q = `${renderF(n1, d)} <span class="frac-op">${op}</span> ${renderF(n2, d)}`;
+      let ansStr = renderF(correctN, d);
+
+      let opts = new Set([ansStr]);
+      opts.add(renderF(correctN, d + d)); // Trampa: sumar denominadores
+      opts.add(renderF(Math.abs(n1 - n2) || 1, d));
+      opts.add(renderF(correctN + 1, d));
+      while (opts.size < 4) opts.add(renderF(correctN + rand(-2, 2), d));
+
+      let exp = `Mismo denominador: el denominador <strong>se queda igual (${d})</strong>. Solo se operan los numeradores: ${n1} ${op} ${n2} = <strong>${correctN}</strong>.`;
+      return { q, ansStr, exp, opts: Array.from(opts).sort(() => Math.random() - 0.5) };
+    }
+
+    // Nivel 2: Naranja -> Distinto denominador (Trampa suma recta)
+    function generateNaranja() {
+      let d1 = rand(2, 5);
+      let d2 = rand(2, 5);
+      while (d1 === d2) d2 = rand(2, 6);
+
+      let n1 = rand(1, 3);
+      let n2 = rand(1, 3);
+      let op = Math.random() > 0.4 ? '+' : '-';
+
+      let num1 = n1 * d2;
+      let num2 = n2 * d1;
+      let denComun = d1 * d2;
+
+      if (op === '-' && num1 < num2) {
+        let tempN = n1; n1 = n2; n2 = tempN;
+        let tempD = d1; d1 = d2; d2 = tempD;
+        num1 = n1 * d2; num2 = n2 * d1; denComun = d1 * d2;
+      }
+
+      let correctN = op === '+' ? num1 + num2 : num1 - num2;
+      let q = `${renderF(n1, d1)} <span class="frac-op">${op}</span> ${renderF(n2, d2)}`;
+      let ansStr = renderF(correctN, denComun);
+
+      let opts = new Set([ansStr]);
+      // LA TRAMPA MORTAL: Línea recta
+      let straightN = op === '+' ? n1 + n2 : Math.abs(n1 - n2);
+      opts.add(renderF(straightN === 0 ? 1 : straightN, d1 + d2));
+      // Trampa: denominador multiplicado pero no numeradores
+      opts.add(renderF(op === '+' ? n1 + n2 : 1, denComun));
+      opts.add(renderF(correctN, d1 + d2));
+      while (opts.size < 4) opts.add(renderF(correctN + rand(-2, 2), denComun));
+
+      let exp = `¡Nunca sumes en línea recta! Busca denominador común: ${renderF(n1*d2, denComun)} ${op} ${renderF(n2*d1, denComun)} = <strong>${renderF(correctN, denComun)}</strong>.`;
+      return { q, ansStr, exp, opts: Array.from(opts).sort(() => Math.random() - 0.5) };
+    }
+
+    // Nivel 3: Azul -> Multiplicación y División (Trampas en cruz)
+    function generateAzul() {
+      let isDiv = Math.random() > 0.5;
+      let n1 = rand(1, 4), d1 = rand(2, 5);
+      let n2 = rand(1, 4), d2 = rand(2, 5);
+
+      let q, ansStr, exp, opts = new Set();
+
+      if (!isDiv) { // Multiplicación en línea recta
+        q = `${renderF(n1, d1)} <span class="frac-op">·</span> ${renderF(n2, d2)}`;
+        let correctN = n1 * n2;
+        let correctD = d1 * d2;
+        ansStr = renderF(correctN, correctD);
+        opts.add(ansStr);
+        opts.add(renderF(n1 * d2, d1 * n2)); // Trampa: Multiplicar en cruz
+        opts.add(renderF(correctN, d1 + d2)); // Trampa: sumar abajo
+        opts.add(renderF(correctD, correctN)); // Invertida
+        exp = `Multiplicar fracciones es <strong>en línea recta</strong>: numerador por numerador (${n1}·${n2} = ${correctN}) y denominador por denominador (${d1}·${d2} = ${correctD}).`;
+      } else { // División en cruz
+        q = `${renderF(n1, d1)} <span class="frac-op">:</span> ${renderF(n2, d2)}`;
+        let correctN = n1 * d2;
+        let correctD = d1 * n2;
+        ansStr = renderF(correctN, correctD);
+        opts.add(ansStr);
+        // TRAMPA CRÍTICA: Invertir el resultado de la cruz
+        opts.add(renderF(correctD, correctN));
+        // Trampa: Dividir en línea recta
+        opts.add(renderF(n1 * n2, d1 * d2));
+        opts.add(renderF(correctN, d1 * d2));
+        exp = `Dividir es <strong>multiplicar en cruz</strong>: el rebote de (${n1}·${d2}) va al <strong>numerador (${correctN})</strong>, y (${d1}·${n2}) al <strong>denominador (${correctD})</strong>.`;
+      }
+
+      while (opts.size < 4) opts.add(renderF(rand(2, 9), rand(3, 12)));
+      return { q, ansStr, exp, opts: Array.from(opts).sort(() => Math.random() - 0.5) };
+    }
+
+    // Nivel 4: Negro -> Jerarquía combinada: a/b + c/d · e/f
+    function generateNegro() {
+      let n1 = 1, d1 = rand(2, 3);
+      let n2 = 1, d2 = rand(2, 3);
+      let n3 = 1, d3 = rand(2, 4);
+
+      let q = `${renderF(n1, d1)} <span class="frac-op">+</span> ${renderF(n2, d2)} <span class="frac-op">·</span> ${renderF(n3, d3)}`;
+      
+      // 1º Multiplicación: (n2*n3) / (d2*d3)
+      let multN = n2 * n3;
+      let multD = d2 * d3;
+      // 2º Suma con n1/d1:
+      let finalD = d1 * multD;
+      let finalN = (n1 * multD) + (multN * d1);
+      
+      let simp = simplify(finalN, finalD);
+      let ansStr = renderF(simp.n, simp.d);
+
+      let opts = new Set([ansStr]);
+      // Trampa: hacer la suma antes que la multiplicación
+      let badSumN = (n1 * d2) + (n2 * d1);
+      let badSumD = d1 * d2;
+      let badFinal = simplify(badSumN * n3, badSumD * d3);
+      opts.add(renderF(badFinal.n, badFinal.d));
+      // Trampa: suma en línea recta total
+      opts.add(renderF(n1 + n2 + n3, d1 + d2 + d3));
+      opts.add(renderF(simp.d, simp.n)); // Invertida
+      while (opts.size < 4) opts.add(renderF(rand(3, 8), rand(4, 12)));
+
+      let exp = `<strong>¡Jerarquía!</strong> Primero la multiplicación: ${renderF(n2, d2)} · ${renderF(n3, d3)} = ${renderF(multN, multD)}.<br>Luego sumas con común denominador: ${renderF(n1, d1)} + ${renderF(multN, multD)} = <strong>${ansStr}</strong>.`;
+      return { q, ansStr, exp, opts: Array.from(opts).sort(() => Math.random() - 0.5) };
+    }
+
+    const classColors = ['opt-c1', 'opt-c2', 'opt-c3', 'opt-c4'];
+
+    function startGame(level) {
+      currentMode = level;
+      racha = 0;
+      updateScore();
+      document.getElementById('screen-home').style.display = 'none';
+      document.getElementById('screen-game').style.display = 'flex';
+      nextProblem();
+    }
+
+    function goHome() { window.location.href = 'index.html'; }
+    function updateScore() { document.getElementById('score-count').textContent = racha; }
+
+    function nextProblem() {
+      document.getElementById('feedback-panel').classList.remove('show');
+      buttonsDisabled = false;
+
+      if (currentMode === 'blanco') currentData = generateBlanco();
+      else if (currentMode === 'naranja') currentData = generateNaranja();
+      else if (currentMode === 'azul') currentData = generateAzul();
+      else currentData = generateNegro();
+      
+      document.getElementById('problem-display').innerHTML = currentData.q;
+
+      for (let i = 0; i < 4; i++) {
+        let btn = document.getElementById(`opt-${i}`);
+        btn.innerHTML = currentData.opts[i];
+        btn.className = `option-btn ${classColors[i]}`;
+      }
+    }
+
+    function checkAnswer(btnIndex) {
+      if (buttonsDisabled) return;
+      buttonsDisabled = true;
+
+      const selectedVal = currentData.opts[btnIndex];
+      const isCorrect = (selectedVal === currentData.ansStr);
+      
+      for (let i = 0; i < 4; i++) {
+        let btn = document.getElementById(`opt-${i}`);
+        if (currentData.opts[i] === currentData.ansStr) {
+          btn.classList.add('correct');
+        } else if (i === btnIndex && !isCorrect) {
+          btn.classList.add('wrong');
+        } else {
+          btn.classList.add('disabled');
+        }
+      }
+
+      if (isCorrect) {
+        racha++;
+        updateScore();
+        
+        const btnElement = document.getElementById(`opt-${btnIndex}`);
+        const rect = btnElement.getBoundingClientRect();
+        createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+        document.body.classList.add('flash-active');
+        document.getElementById('problem-display').classList.add('pop-active');
+        
+        setTimeout(() => { 
+          document.body.classList.remove('flash-active');
+          document.getElementById('problem-display').classList.remove('pop-active');
+        }, 600);
+
+        setTimeout(() => { nextProblem(); }, 800); 
+      } else {
+        racha = 0; 
+        updateScore();
+
+        document.body.classList.add('error-active');
+        document.getElementById('problem-display').classList.add('shake-active');
+        
+        setTimeout(() => { 
+          document.body.classList.remove('error-active');
+          document.getElementById('problem-display').classList.remove('shake-active');
+        }, 500);
+
+        document.getElementById('feedback-desc').innerHTML = currentData.exp;
+        setTimeout(() => { document.getElementById('feedback-panel').classList.add('show'); }, 300);
+      }
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Error', err));
+      });
+    }
+  </script>
+</body>
+</html>
