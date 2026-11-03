@@ -185,17 +185,17 @@
       flex-direction: column;
       width: 100%;
       height: 100%;
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      padding: 0;
+      padding: 0.5rem;
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      box-sizing: border-box;
     }
 
     .game-header {
+      flex-shrink: 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 4rem 1rem 1rem;
-      padding-top: max(1rem, env(safe-area-inset-top));
+      padding: 0.5rem 4rem 0.5rem 0.5rem;
     }
     .btn-back {
       background: var(--bg-card);
@@ -218,7 +218,8 @@
     }
 
     .problem-container {
-      flex: 1; /* Rellena el espacio del centro */
+      flex: 1;
+      min-height: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -227,9 +228,12 @@
       font-family: monospace;
       letter-spacing: -2px;
       text-align: center;
+      padding: 0.2rem;
       color: var(--text-main);
-      white-space: nowrap; 
+      position: relative;
+      white-space: nowrap;
       width: 100%;
+      box-sizing: border-box;
     }
 
     #problem-display.long-math {
@@ -239,12 +243,12 @@
 
     /* BURBUJAS DE OPCIONES */
     .options-grid {
+      flex-shrink: 0;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.6rem;
       padding: 0.5rem;
-      width: 100%;
-      padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      margin-bottom: calc(0.5rem + env(safe-area-inset-bottom));
     }
     .option-btn {
       font-size: clamp(1.2rem, 5vw, 1.8rem);
