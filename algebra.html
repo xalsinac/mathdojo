@@ -52,9 +52,9 @@
       margin: 0;
       padding: 0;
       width: 100%;
-      height: 100vh;  /* Compatibilidad con navegadores antiguos */
-      height: 100svh; /* Evita saltos por las barras del navegador móvil */
-      height: 100dvh; /* Se adapta al viewport dinámico */
+      height: 100vh;
+      height: 100svh;
+      height: 100dvh;
       background-color: var(--bg-primary);
       color: var(--text-main);
       font-family: system-ui, -apple-system, sans-serif;
@@ -62,6 +62,52 @@
       flex-direction: column;
       overflow: hidden;
       transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* EFECTOS PANTALLA COMPLETA */
+    @keyframes screenFlash {
+      0% { box-shadow: inset 0 0 120px rgba(16, 185, 129, 0.4); }
+      100% { box-shadow: inset 0 0 0px rgba(16, 185, 129, 0); }
+    }
+    body.flash-active {
+      animation: screenFlash 0.6s ease-out;
+    }
+
+    @keyframes errorFlash {
+      0% { box-shadow: inset 0 0 150px rgba(244, 63, 94, 0.5); }
+      100% { box-shadow: inset 0 0 0px rgba(244, 63, 94, 0); }
+    }
+    body.error-active {
+      animation: errorFlash 0.5s ease-out;
+    }
+
+    /* ANIMACIONES DEL TEXTO CENTRAL */
+    @keyframes textPop {
+      0% { transform: scale(1) translateY(-3vh); }
+      40% { transform: scale(1.2) translateY(-3vh); color: var(--accent-success); text-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+      100% { transform: scale(1) translateY(-3vh); }
+    }
+    .pop-active {
+      animation: textPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes textShake {
+      0%, 100% { transform: translateX(0) translateY(-3vh); }
+      20%, 60% { transform: translateX(-10px) translateY(-3vh); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+      40%, 80% { transform: translateX(10px) translateY(-3vh); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+    }
+    .shake-active {
+      animation: textShake 0.4s ease-in-out;
+    }
+
+    /* PARTÍCULAS */
+    .particle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 2rem;
+      opacity: 1;
+      z-index: 999;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-out;
     }
 
     .theme-toggle-btn {
@@ -136,7 +182,6 @@
     }
     .mode-btn:active { transform: scale(0.96); }
     
-    /* Colores de Cinturones */
     .btn-blanco { background: rgba(248, 250, 252, 0.1); border-color: #cbd5e1; color: #f8fafc; }
     [data-theme="light"] .btn-blanco { background: #f1f5f9; color: #334155; border-color: #94a3b8; }
     
@@ -152,7 +197,6 @@
       display: none;
       flex: 1 1 auto;
       flex-direction: column;
-      /* No usar height:100% dentro del body flex: evita sumar alturas */
       height: auto;
       min-height: 0;
       width: 100%;
@@ -193,7 +237,6 @@
     .problem-container {
       flex: 1 1 0;
       min-height: 0;
-      /* Sube ligeramente la operación respecto al centro vertical */
       transform: translateY(-3vh);
       display: flex;
       align-items: center;
@@ -230,8 +273,6 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.6rem;
       padding: 0.5rem;
-      /* Separación inferior obligatoria: no dependemos de safe-area,
-         que algunos navegadores Android notifican como 0 */
       margin: 0 0 24px 0;
       flex: 0 0 auto;
       width: 100%;
@@ -263,19 +304,6 @@
     .option-btn.wrong { background: var(--accent-op) !important; border-color: var(--accent-op) !important; color: #fff !important; box-shadow: 0 0 25px rgba(244, 63, 94, 0.6); }
     .option-btn.wrong sup { color: #fff !important; }
     .option-btn.disabled { pointer-events: none; opacity: 0.25; transform: scale(0.95); }
-
-    .success-anim {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      font-size: 6rem;
-      opacity: 0;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      pointer-events: none;
-      z-index: 100;
-    }
-    .success-anim.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
     /* TARJETA DE EXPLICACIÓN */
     #feedback-panel {
@@ -354,7 +382,6 @@
 
     <div class="problem-container">
       <div id="problem-display"></div>
-      <div id="success-anim" class="success-anim">✨✅✨</div>
     </div>
 
     <div class="options-grid" id="options-container">
@@ -389,6 +416,37 @@
       }
     }
     window.addEventListener('DOMContentLoaded', initTheme);
+
+    // ================= FUNCIONES DE JUGABILIDAD (GAME FEEL) =================
+    function createExplosion(x, y) {
+      const emojis = ['✨', '🔥', '⭐', '🥋', '💥', '💯'];
+      const numParticles = 12;
+
+      for (let i = 0; i < numParticles; i++) {
+        let p = document.createElement('div');
+        p.className = 'particle';
+        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        document.body.appendChild(p);
+
+        let angle = Math.random() * Math.PI * 2;
+        let velocity = 60 + Math.random() * 120;
+        let tx = Math.cos(angle) * velocity;
+        let ty = Math.sin(angle) * velocity;
+        let rot = Math.random() * 360;
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            p.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(${Math.random() * 0.8 + 0.5})`;
+            p.style.opacity = '0';
+          });
+        });
+
+        setTimeout(() => p.remove(), 800);
+      }
+    }
 
     // ================= MOTOR ALGEBRAICO =================
     let currentMode = '';
@@ -584,12 +642,35 @@
       if (isCorrect) {
         racha++;
         updateScore();
-        const anim = document.getElementById('success-anim');
-        anim.classList.add('show');
-        setTimeout(() => { anim.classList.remove('show'); nextProblem(); }, 1200);
+        
+        // Disparar partículas
+        const btnElement = document.getElementById(`opt-${btnIndex}`);
+        const rect = btnElement.getBoundingClientRect();
+        createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+        // Efecto Pantalla Completa y Latido (Acierto)
+        document.body.classList.add('flash-active');
+        document.getElementById('problem-display').classList.add('pop-active');
+        
+        setTimeout(() => { 
+          document.body.classList.remove('flash-active');
+          document.getElementById('problem-display').classList.remove('pop-active');
+        }, 600);
+
+        setTimeout(() => { nextProblem(); }, 800); 
       } else {
         racha = 0; 
         updateScore();
+
+        // Efecto Pantalla Completa y Temblor (Fallo)
+        document.body.classList.add('error-active');
+        document.getElementById('problem-display').classList.add('shake-active');
+        
+        setTimeout(() => { 
+          document.body.classList.remove('error-active');
+          document.getElementById('problem-display').classList.remove('shake-active');
+        }, 500);
+
         document.getElementById('feedback-desc').innerHTML = currentData.exp;
         setTimeout(() => { document.getElementById('feedback-panel').classList.add('show'); }, 300);
       }
