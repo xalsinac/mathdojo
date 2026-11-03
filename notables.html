@@ -39,17 +39,19 @@
       --accent-main: #be123c;
     }
 
-    body {
+    html, body {
       margin: 0;
       padding: 0;
+      width: 100%;
+      height: 100%;
+      position: fixed; /* Ancla la app a las 4 esquinas físicas */
+      top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden; /* Prohíbe cualquier scroll */
       background-color: var(--bg-primary);
       color: var(--text-main);
       font-family: system-ui, -apple-system, sans-serif;
-      height: 100vh;
-      height: 100dvh; /* Alto dinámico real */
       display: flex;
       flex-direction: column;
-      overflow: hidden;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
@@ -92,19 +94,40 @@
 
     /* PANTALLA DE JUEGO */
     #screen-game {
-      display: none; flex-direction: column; height: 100%;
-      padding: 0.5rem; box-sizing: border-box; position: relative;
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      height: 100%; /* Se adapta estrictamente al body fijado */
+      padding: 0.5rem;
+      /* Forzamos un margen inferior extra de seguridad */
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); 
+      box-sizing: border-box;
     }
 
-    .game-header { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 4rem 0.5rem 0.5rem; }
-    .btn-back { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 1.1rem; cursor: pointer; padding: 0.5rem 0.8rem; font-weight: bold; }
-    .score-board { background: rgba(16, 185, 129, 0.15); color: var(--accent-success); padding: 0.6rem 1.2rem; border-radius: 20px; font-weight: 900; font-size: 1.1rem; border: 1px solid rgba(16, 185, 129, 0.3); }
-
+    .game-header {
+      flex-shrink: 0; /* Prohíbe que el header se aplaste */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 4rem 0.5rem 0.5rem;
+    }
     .problem-container {
-      flex-grow: 1; display: flex; align-items: center; justify-content: center;
-      font-size: clamp(2.4rem, 8vw, 4rem); font-weight: 900; font-family: monospace; letter-spacing: -1px;
-      text-align: center; padding: 0.2rem; color: var(--text-main); position: relative;
-      white-space: nowrap; width: 100%; box-sizing: border-box;
+      flex: 1; 
+      min-height: 0;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      font-size: clamp(2.4rem, 8vw, 4rem); 
+      font-weight: 900; 
+      font-family: monospace; 
+      letter-spacing: -1px;
+      text-align: center; 
+      padding: 0.2rem; 
+      color: var(--text-main); 
+      position: relative;
+      white-space: nowrap; 
+      width: 100%; 
+      box-sizing: border-box;
     }
     
     #problem-display.long-math { font-size: clamp(1.6rem, 6vw, 2.5rem); }
@@ -162,7 +185,7 @@
 
     /* BURBUJAS DE OPCIONES */
     .options-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; padding: 0.5rem; 
+      flex-shrink: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; padding: 0.5rem; 
       margin-bottom: calc(0.5rem + env(safe-area-inset-bottom)); /* Corrección barra gestos */
     }
     .option-btn {
