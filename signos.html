@@ -129,12 +129,12 @@
 
     .btn-desc { font-size: 0.85rem; font-weight: 600; opacity: 0.85; }
 
-    /* PANTALLA DE JUEGO */
+    /* PANTALLA DE JUEGO (CORREGIDA PARA MÓVIL) */
     #screen-game {
       display: none;
       flex-direction: column;
       height: 100%;
-      padding: 1rem;
+      padding: 0.5rem; /* Ajuste para móvil */
       box-sizing: border-box;
       position: relative;
     }
@@ -170,54 +170,53 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(3.2rem, 12vw, 5.5rem);
+      font-size: clamp(2.8rem, 10vw, 4.5rem); /* Ligeramente reducido para móvil */
       font-weight: 900;
       font-family: monospace;
       letter-spacing: -2px;
       text-align: center;
-      padding: 0.5rem;
+      padding: 0.2rem; /* Ajuste para móvil */
       color: var(--text-main);
       position: relative;
-      /* ESTO ES LO NUEVO: Evita los saltos de línea */
       white-space: nowrap; 
       width: 100%;
       box-sizing: border-box;
     }
 
-    /* NUEVA CLASE: Para encoger operaciones combinadas largas */
     #problem-display.long-math {
-      font-size: clamp(1.4rem, 7vw, 4rem);
+      font-size: clamp(1.4rem, 7vw, 3.5rem);
       letter-spacing: -1px;
     }
 
-    /* BURBUJAS DE OPCIONES */
+    /* BURBUJAS DE OPCIONES (CORREGIDAS PARA MÓVIL) */
     .options-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      padding: 1rem;
-      margin-bottom: 2rem;
+      gap: 0.6rem; /* Ajuste para móvil */
+      padding: 0.5rem; /* Ajuste para móvil */
+      margin-bottom: 0.5rem; /* Ajuste para móvil */
     }
     .option-btn {
-      font-size: 2.2rem;
+      font-size: clamp(1.2rem, 5vw, 1.8rem); /* Ajuste para móvil */
       font-weight: 900;
       font-family: monospace;
-      padding: 1.8rem 0;
-      border-radius: 20px;
+      padding: 1rem 0.2rem; /* Ajuste crítico de altura para móvil */
+      border-radius: 16px;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--text-main);
+      text-align: center;
     }
     .option-btn:active { transform: scale(0.92); }
     
-    .opt-c1 { background: rgba(56, 189, 248, 0.15); border: 3px solid #38bdf8; }
-    .opt-c2 { background: rgba(244, 63, 94, 0.15); border: 3px solid #f43f5e; }
-    .opt-c3 { background: rgba(251, 191, 36, 0.15); border: 3px solid #fbbf24; }
-    .opt-c4 { background: rgba(16, 185, 129, 0.15); border: 3px solid #10b981; }
+    .opt-c1 { background: rgba(56, 189, 248, 0.15); border: 2px solid #38bdf8; }
+    .opt-c2 { background: rgba(244, 63, 94, 0.15); border: 2px solid #f43f5e; }
+    .opt-c3 { background: rgba(251, 191, 36, 0.15); border: 2px solid #fbbf24; }
+    .opt-c4 { background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; }
 
     .option-btn.correct { background: var(--accent-success) !important; border-color: var(--accent-success) !important; color: #022c22 !important; box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); }
     .option-btn.wrong { background: var(--accent-op) !important; border-color: var(--accent-op) !important; color: #fff !important; box-shadow: 0 0 25px rgba(244, 63, 94, 0.6); }
@@ -296,7 +295,6 @@
 </head>
 <body>
 
-  <!-- BOTÓN GLOBAL DE TEMA -->
   <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">
     <span id="theme-icon">☀️</span>
   </button>
@@ -343,7 +341,6 @@
   </div>
 
   <script>
-    // ================= LÓGICA DE TEMA INCORPORADA =================
     function initTheme() {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
@@ -353,7 +350,7 @@
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       if (isLight) {
         document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('mathlab_theme', 'dark'); // Compartimos clave con Math Lab
+        localStorage.setItem('mathlab_theme', 'dark');
         document.getElementById('theme-icon').textContent = '☀️';
       } else {
         document.documentElement.setAttribute('data-theme', 'light');
@@ -363,7 +360,6 @@
     }
     window.addEventListener('DOMContentLoaded', initTheme);
 
-    // ================= MOTOR DE GENERACIÓN =================
     let currentMode = '';
     let currentData = {};
     let racha = 0;
@@ -464,7 +460,6 @@
       return Array.from(opts).sort(() => Math.random() - 0.5);
     }
 
-    // ================= CONTROLADORES DE INTERFAZ =================
     const classColors = ['opt-c1', 'opt-c2', 'opt-c3', 'opt-c4'];
 
     function startGame(mode) {
@@ -477,7 +472,7 @@
     }
 
     function goHome() {
-  window.location.href = 'index.html'; // Te devuelve al Dojo principal
+      window.location.href = 'index.html'; // Te devuelve al Dojo principal
     }
 
     function updateScore() {
@@ -485,25 +480,20 @@
     }
 
     function nextProblem() {
-      // 1. Ocultamos paneles y habilitamos botones
       document.getElementById('feedback-panel').classList.remove('show');
       buttonsDisabled = false;
 
-      // 2. Generamos la nueva operación ANTES de imprimirla
       currentData = (currentMode === 'facil') ? generateEasy() : generateCombined();
       
-      // 3. Pintamos la operación
       const displayEl = document.getElementById('problem-display');
       displayEl.innerHTML = currentData.q;
 
-      // 4. Adaptador visual inteligente para operaciones largas
       if (currentData.q.length > 11) {
         displayEl.classList.add('long-math');
       } else {
         displayEl.classList.remove('long-math');
       }
 
-      // 5. Asignamos las respuestas a los botones
       const optionsArray = getOptions(currentData.ans);
       currentData.options = optionsArray;
 
@@ -555,7 +545,6 @@
       }
     }
 
-    // Registro del SW
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => console.log('Fallo al registrar SW', err));
