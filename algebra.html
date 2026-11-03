@@ -45,7 +45,9 @@
       background-color: var(--bg-primary);
       color: var(--text-main);
       font-family: system-ui, -apple-system, sans-serif;
+      /* ESTO ES LO NUEVO: Alto dinámico */
       height: 100vh;
+      height: 100dvh; 
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -208,7 +210,8 @@
       grid-template-columns: 1fr 1fr;
       gap: 0.6rem; 
       padding: 0.5rem; 
-      margin-bottom: 0.5rem; 
+      /* ESTO ES LO NUEVO: Esquiva la barra de gestos del móvil */
+      margin-bottom: calc(0.5rem + env(safe-area-inset-bottom)); 
     }
     .option-btn {
       font-size: clamp(1.1rem, 4.5vw, 1.6rem); 
