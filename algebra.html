@@ -7,7 +7,7 @@
     }
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Sensei del Álgebra | MATH LAB</title>
   
   <meta name="theme-color" content="#0b1120">
@@ -79,18 +79,18 @@
 
     /* ANIMACIONES DEL TEXTO CENTRAL */
     @keyframes textPop {
-      0% { transform: scale(1) translateY(-3vh); }
-      40% { transform: scale(1.2) translateY(-3vh); color: var(--accent-success); text-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
-      100% { transform: scale(1) translateY(-3vh); }
+      0% { transform: scale(1); }
+      40% { transform: scale(1.2); color: var(--accent-success); text-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+      100% { transform: scale(1); }
     }
     .pop-active {
       animation: textPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     @keyframes textShake {
-      0%, 100% { transform: translateX(0) translateY(-3vh); }
-      20%, 60% { transform: translateX(-10px) translateY(-3vh); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
-      40%, 80% { transform: translateX(10px) translateY(-3vh); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+      40%, 80% { transform: translateX(10px); color: var(--accent-op); text-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
     }
     .shake-active {
       animation: textShake 0.4s ease-in-out;
@@ -178,6 +178,7 @@
     }
     .mode-btn:active { transform: scale(0.96); }
     
+    /* Colores de Cinturones */
     .btn-blanco { background: rgba(248, 250, 252, 0.1); border-color: #cbd5e1; color: #f8fafc; }
     [data-theme="light"] .btn-blanco { background: #f1f5f9; color: #334155; border-color: #94a3b8; }
     
@@ -188,23 +189,23 @@
 
     .btn-desc { font-size: 0.8rem; font-weight: 600; opacity: 0.85; }
 
-    /* PANTALLA DE JUEGO */
+    /* PANTALLA DE JUEGO (REDISEÑADA PARA BLOQUEO ABSOLUTO) */
     #screen-game {
       display: none;
       flex-direction: column;
       width: 100%;
-      height: 100%; /* Se adapta estrictamente al body fijado */
-      padding: 0.5rem;
-      padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); 
-      box-sizing: border-box;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      padding: 0;
     }
 
     .game-header {
-      flex-shrink: 0; /* Prohíbe que el header se aplaste */
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.5rem 4rem 0.5rem 0.5rem;
+      padding: 1rem 4rem 1rem 1rem;
+      padding-top: max(1rem, env(safe-area-inset-top));
     }
     .btn-back {
       background: var(--bg-card);
@@ -227,23 +228,18 @@
     }
 
     .problem-container {
-      flex: 1; /* Ocupa el espacio sobrante... */
-      min-height: 0; /* ...pero NUNCA empuja a los demás elementos */
-      transform: translateY(-3vh);
+      flex: 1; /* Rellena el espacio del centro */
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(2.4rem, 9vw, 4.2rem); 
+      font-size: clamp(2.4rem, 8vw, 4rem); 
       font-weight: 900;
       font-family: monospace;
       letter-spacing: -1px;
       text-align: center;
-      padding: 0.2rem; 
       color: var(--text-main);
-      position: relative;
       white-space: nowrap; 
       width: 100%;
-      box-sizing: border-box;
     }
     
     #problem-display.long-math { font-size: clamp(1.5rem, 6vw, 3rem); }
@@ -261,18 +257,19 @@
 
     /* BURBUJAS DE OPCIONES */
     .options-grid {
-      flex-shrink: 0; /* PROHÍBE que los botones sean empujados o aplastados */
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.6rem;
-      padding: 0.5rem;
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 0.6rem; 
+      padding: 0.5rem; 
       width: 100%;
+      /* Esto las aleja del fondo del dispositivo */
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
     }
     .option-btn {
       font-size: clamp(1.1rem, 4.5vw, 1.6rem); 
       font-weight: 900;
       font-family: monospace;
-      padding: 1rem 0.2rem; 
+      padding: 1.2rem 0.2rem; 
       border-radius: 16px;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
