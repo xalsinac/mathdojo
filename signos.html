@@ -40,13 +40,25 @@
     }
 
     /* ================= ESTILOS GENERALES ================= */
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      width: 100%;
+      height: 100%;
+    }
+
     body {
       margin: 0;
       padding: 0;
+      width: 100%;
+      height: 100vh;  /* Compatibilidad con navegadores antiguos */
+      height: 100svh; /* Evita saltos por las barras del navegador móvil */
+      height: 100dvh; /* Se adapta al viewport dinámico */
       background-color: var(--bg-primary);
       color: var(--text-main);
       font-family: system-ui, -apple-system, sans-serif;
-      height: 100vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -132,14 +144,21 @@
     /* PANTALLA DE JUEGO (CORREGIDA PARA MÓVIL) */
     #screen-game {
       display: none;
+      flex: 1 1 auto;
       flex-direction: column;
-      height: 100%;
-      padding: 0.5rem; /* Ajuste para móvil */
+      /* No usar height:100% dentro del body flex: evita sumar alturas */
+      height: auto;
+      min-height: 0;
+      width: 100%;
+      padding: 0.5rem;
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
       box-sizing: border-box;
       position: relative;
+      overflow: hidden;
     }
 
     .game-header {
+      flex: 0 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -166,7 +185,8 @@
     }
 
     .problem-container {
-      flex-grow: 1;
+      flex: 1 1 0;
+      min-height: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -191,10 +211,12 @@
     /* BURBUJAS DE OPCIONES (CORREGIDAS PARA MÓVIL) */
     .options-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.6rem; /* Ajuste para móvil */
-      padding: 0.5rem; /* Ajuste para móvil */
-      margin-bottom: 0.5rem; /* Ajuste para móvil */
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem;
+      padding: 0.5rem;
+      margin: 0;
+      flex: 0 0 auto;
+      width: 100%;
     }
     .option-btn {
       font-size: clamp(1.2rem, 5vw, 1.8rem); /* Ajuste para móvil */
