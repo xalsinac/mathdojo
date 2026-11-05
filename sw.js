@@ -1,4 +1,4 @@
-const CACHE_NAME = 'math-dojo-v4';
+const CACHE_NAME = 'math-dojo-v7'; // Sube este número si haces cambios gigantes
 
 const ASSETS_TO_CACHE = [
   './',
@@ -8,22 +8,20 @@ const ASSETS_TO_CACHE = [
   './notables.html',
   './factor.html',
   './balanza.html',
+  './fracciones.html',
+  './rectas.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'
 ];
 
-// Instalación: guarda todos los archivos y salta la espera
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
-  );
   self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
+  );
 });
 
-// Activación: limpia las cachés de versiones anteriores automáticamente
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -40,11 +38,20 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch: sirve desde la caché si existe, o busca en la red si hay conexión
+// NUEVA ESTRATEGIA: "Network First" (Red primero, caché después)
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
+    fetch(event.request)
+      .then(networkResponse => {
+        // Si hay internet y responde bien, actualizamos la caché "en silencio" con la versión nueva
+        return caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+      })
+      .catch(() => {
+        // Si falla (estamos offline), sacamos la versión de la caché
+        return caches.match(event.request);
+      })
   );
 });
