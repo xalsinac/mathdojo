@@ -40,10 +40,10 @@
     }
     [data-theme="light"] {
       --bg-primary: #f5f4ef;
-      --bg-card: rgba(255, 255, 255, 0.86);
-      --text-main: #14151a;
-      --text-muted: #5d6170;
-      --border-color: rgba(0, 0, 0, 0.08);
+      --bg-card: rgba(255, 255, 255, 0.94);
+      --text-main: #0f172a;
+      --text-muted: #334155;
+      --border-color: rgba(0, 0, 0, 0.14);
     }
     * { box-sizing: border-box; }
     
@@ -203,7 +203,7 @@
     }
 
     [data-theme="light"] .card-full-bg {
-      opacity: 0.12;
+      opacity: 0.07;
       filter: none;
       mix-blend-mode: multiply;
     }
@@ -213,10 +213,10 @@
       opacity: 0.34;
     }
     [data-theme="light"] .game-card:hover .card-full-bg {
-      opacity: 0.18;
+      opacity: 0.12;
     }
 
-    /* COLORES TEMÁTICOS CON TINTADO LUMINOSO Y CRISTALINO */
+    /* COLORES TEMÁTICOS CON TINTADO LUMINOSO Y ALTO CONTRASTE */
     .card-enteros { 
       --card-glow: rgba(56, 189, 248, 0.32);
       border-color: rgba(56, 189, 248, 0.45); 
@@ -224,10 +224,11 @@
     }
     .card-enteros h2 { color: #38bdf8; }
     [data-theme="light"] .card-enteros {
-      border-color: rgba(2, 132, 199, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(186, 230, 253, 0.4) 100%);
+      border: 2px solid #0284c7 !important;
+      background: linear-gradient(150deg, #ffffff 20%, rgba(186, 230, 253, 0.75) 100%) !important;
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
-    [data-theme="light"] .card-enteros h2 { color: #0284c7; }
+    [data-theme="light"] .card-enteros h2 { color: #0284c7 !important; font-weight: 900 !important; }
     
     .card-algebra { 
       --card-glow: rgba(168, 85, 247, 0.32);
@@ -236,10 +237,11 @@
     }
     .card-algebra h2 { color: #a855f7; }
     [data-theme="light"] .card-algebra {
-      border-color: rgba(124, 58, 237, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(233, 213, 255, 0.4) 100%);
+      border: 2px solid #7c3aed !important;
+      background: linear-gradient(150deg, #ffffff 20%, rgba(233, 213, 255, 0.75) 100%) !important;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
-    [data-theme="light"] .card-algebra h2 { color: #7c3aed; }
+    [data-theme="light"] .card-algebra h2 { color: #6d28d9 !important; font-weight: 900 !important; }
 
     .card-notables { 
       --card-glow: rgba(244, 63, 94, 0.32);
@@ -248,10 +250,11 @@
     }
     .card-notables h2 { color: #f43f5e; }
     [data-theme="light"] .card-notables {
-      border-color: rgba(225, 29, 72, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(254, 205, 211, 0.4) 100%);
+      border: 2px solid #e11d48 !important;
+      background: linear-gradient(150deg, #ffffff 20%, rgba(254, 205, 211, 0.75) 100%) !important;
+      box-shadow: 0 6px 20px rgba(225, 29, 72, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
-    [data-theme="light"] .card-notables h2 { color: #e11d48; }
+    [data-theme="light"] .card-notables h2 { color: #be123c !important; font-weight: 900 !important; }
 
     .card-factor { 
       --card-glow: rgba(14, 165, 233, 0.32);
@@ -260,10 +263,11 @@
     }
     .card-factor h2 { color: #0ea5e9; }
     [data-theme="light"] .card-factor {
-      border-color: rgba(2, 132, 199, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(186, 230, 253, 0.4) 100%);
+      border: 2px solid #0284c7 !important;
+      background: linear-gradient(150deg, #ffffff 20%, rgba(186, 230, 253, 0.75) 100%) !important;
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
-    [data-theme="light"] .card-factor h2 { color: #0284c7; }
+    [data-theme="light"] .card-factor h2 { color: #0369a1 !important; font-weight: 900 !important; }
 
     .card-ronin { 
       --card-glow: rgba(236, 72, 153, 0.32);
@@ -272,10 +276,11 @@
     }
     .card-ronin h2 { color: #ec4899; }
     [data-theme="light"] .card-ronin {
-      border-color: rgba(219, 39, 119, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(251, 207, 232, 0.4) 100%);
+      border: 2px solid #db2777 !important;
+      background: linear-gradient(150deg, #ffffff 20%, rgba(251, 207, 232, 0.75) 100%) !important;
+      box-shadow: 0 6px 20px rgba(219, 39, 119, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
-    [data-theme="light"] .card-ronin h2 { color: #db2777; }
+    [data-theme="light"] .card-ronin h2 { color: #be185d !important; font-weight: 900 !important; }
 
     .card-balanza { 
       --card-glow: rgba(245, 158, 11, 0.32);
@@ -284,10 +289,11 @@
     }
     .card-balanza h2 { color: #f59e0b; }
     [data-theme="light"] .card-balanza {
-      border-color: rgba(217, 119, 6, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(254, 215, 170, 0.4) 100%);
+      border: 2px solid #d97706 !important;
+      background: linear-gradient(150deg, #ffffff 20%, rgba(254, 215, 170, 0.75) 100%) !important;
+      box-shadow: 0 6px 20px rgba(217, 119, 6, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
-    [data-theme="light"] .card-balanza h2 { color: #d97706; }
+    [data-theme="light"] .card-balanza h2 { color: #b45309 !important; font-weight: 900 !important; }
 
     .card-fracciones { 
       --card-glow: rgba(6, 182, 212, 0.32);
@@ -296,10 +302,11 @@
     }
     .card-fracciones h2 { color: #06b6d4; }
     [data-theme="light"] .card-fracciones {
-      border-color: rgba(8, 145, 178, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(207, 250, 254, 0.4) 100%);
+      border: 2px solid #0891b2 !important;
+      background: linear-gradient(150deg, #ffffff 20%, rgba(207, 250, 254, 0.75) 100%) !important;
+      box-shadow: 0 6px 20px rgba(8, 145, 178, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
-    [data-theme="light"] .card-fracciones h2 { color: #0891b2; }
+    [data-theme="light"] .card-fracciones h2 { color: #0e7490 !important; font-weight: 900 !important; }
 
     .card-rectas { 
       --card-glow: rgba(16, 185, 129, 0.32);
@@ -308,10 +315,11 @@
     }
     .card-rectas h2 { color: #10b981; }
     [data-theme="light"] .card-rectas {
-      border-color: rgba(5, 150, 105, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(209, 250, 229, 0.4) 100%);
+      border: 2px solid #059669 !important;
+      background: linear-gradient(150deg, #ffffff 20%, rgba(209, 250, 229, 0.75) 100%) !important;
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
-    [data-theme="light"] .card-rectas h2 { color: #059669; }
+    [data-theme="light"] .card-rectas h2 { color: #047857 !important; font-weight: 900 !important; }
 
     /* TARJETA ESPECIAL: ACADEMIA MATH LAB */
     .promo-card {
@@ -328,9 +336,11 @@
       --card-glow: rgba(59, 130, 246, 0.3);
     }
     [data-theme="light"] .promo-card {
-      border-color: rgba(37, 99, 235, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 40%, rgba(219, 234, 254, 0.5) 100%);
+      border: 2px solid #2563eb !important;
+      background: linear-gradient(150deg, #ffffff 25%, rgba(191, 219, 254, 0.75) 100%) !important;
+      box-shadow: 0 6px 22px rgba(37, 99, 235, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
+    [data-theme="light"] .promo-card h2 { color: #1d4ed8 !important; font-weight: 900 !important; }
     .promo-card .game-info p {
       font-size: 0.85rem;
       margin-top: 0.3rem;
@@ -352,9 +362,11 @@
       --card-glow: rgba(168, 85, 247, 0.3);
     }
     [data-theme="light"] .constellation-hub-card {
-      border-color: rgba(124, 58, 237, 0.35);
-      background: linear-gradient(145deg, var(--bg-card) 40%, rgba(243, 232, 255, 0.55) 100%);
+      border: 2px solid #7c3aed !important;
+      background: linear-gradient(150deg, #ffffff 25%, rgba(233, 213, 255, 0.75) 100%) !important;
+      box-shadow: 0 6px 22px rgba(124, 58, 237, 0.18), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     }
+    [data-theme="light"] .constellation-hub-card h2 { color: #5b21b6 !important; font-weight: 900 !important; }
     .constellation-icon-wrap {
       width: 50px;
       height: 50px;
@@ -370,9 +382,9 @@
       box-shadow: 0 0 16px rgba(168, 85, 247, 0.25);
     }
     [data-theme="light"] .constellation-icon-wrap {
-      background: rgba(124, 58, 237, 0.12);
-      border-color: rgba(124, 58, 237, 0.3);
-      color: #7c3aed;
+      background: rgba(124, 58, 237, 0.15);
+      border: 2px solid #7c3aed;
+      color: #6d28d9;
     }
     .constellation-hub-card .badge-hub {
       display: inline-flex;
@@ -390,20 +402,22 @@
       margin-bottom: 0.3rem;
     }
     [data-theme="light"] .constellation-hub-card .badge-hub {
-      background: rgba(124, 58, 237, 0.1);
-      border-color: rgba(124, 58, 237, 0.3);
-      color: #6d28d9;
+      background: #ede9fe;
+      border-color: #8b5cf6;
+      color: #5b21b6;
+      font-weight: 800;
     }
     .constellation-hub-card h2 {
       color: #c084fc;
-    }
-    [data-theme="light"] .constellation-hub-card h2 {
-      color: #6d28d9;
     }
     .constellation-hub-card .game-info p {
       font-size: 0.85rem;
       margin-top: 0.25rem;
       line-height: 1.35;
+    }
+    [data-theme="light"] .game-info p {
+      color: #1e293b !important;
+      font-weight: 600 !important;
     }
   </style>
 </head>

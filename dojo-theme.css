@@ -4,7 +4,7 @@
    Sincronizado con Math Universe & Math Lab
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800;900&display=swap');
 
 :root {
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -27,20 +27,20 @@
 }
 
 [data-theme="light"] {
-  /* PALETA MODO CLARO (Warm Stone / Pergamino Cósmico) */
+  /* PALETA MODO CLARO (Warm Stone / Alta Legibilidad y Contraste) */
   --bg-primary: #f5f4ef;
-  --bg-card: rgba(255, 255, 255, 0.86);
+  --bg-card: rgba(255, 255, 255, 0.94);
   --bg-card-solid: #ffffff;
-  --bg-elevated: rgba(255, 255, 255, 0.95);
-  --border-color: rgba(0, 0, 0, 0.08);
-  --border-focus: rgba(2, 132, 199, 0.5);
-  --text-main: #14151a;
-  --text-muted: #5d6170;
+  --bg-elevated: rgba(255, 255, 255, 0.98);
+  --border-color: rgba(0, 0, 0, 0.14);
+  --border-focus: rgba(2, 132, 199, 0.6);
+  --text-main: #0f172a; /* Slate 900 - Máximo contraste */
+  --text-muted: #334155; /* Slate 700 - Texto secundario oscuro y nítido */
   --accent-blue: #0284c7;
   --accent-gold: #d97706;
   --accent-success: #059669;
   --accent-op: #e11d48;
-  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 html, body, button, input, select, textarea, h1, h2, h3, p, span, a, .app-title, .app-subtitle, .mode-btn {
@@ -112,8 +112,42 @@ body {
 }
 
 /* ==========================================================================
-   CONTROLES SUPERIORES (SONIDO Y TEMA) - NUNCA SE SOLAPAN
+   CONTROLES SUPERIORES (SONIDO, TEMA Y BOTÓN INICIO)
    ========================================================================== */
+
+.dojo-home-link {
+  position: fixed !important;
+  top: max(0.85rem, env(safe-area-inset-top)) !important;
+  left: max(0.85rem, env(safe-area-inset-left)) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem;
+  background: var(--bg-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-decoration: none !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: transform 0.18s ease, color 0.2s ease, border-color 0.2s ease;
+  z-index: 100 !important;
+}
+.dojo-home-link:hover {
+  color: var(--text-main);
+  border-color: var(--accent-blue);
+  transform: translateY(-1px);
+}
+[data-theme="light"] .dojo-home-link {
+  background: #ffffff !important;
+  border: 2px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
+}
 
 .top-controls {
   position: fixed !important;
@@ -141,7 +175,7 @@ body {
   background: var(--bg-card);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
   border-radius: 12px;
   cursor: pointer;
   padding: 0.55rem 0.75rem;
@@ -161,6 +195,15 @@ body {
   transform: translateY(-1px);
   border-color: var(--accent-blue);
   box-shadow: 0 6px 18px rgba(56, 189, 248, 0.25);
+}
+
+[data-theme="light"] .top-controls .sound-toggle-btn,
+[data-theme="light"] .top-controls .theme-toggle-btn,
+[data-theme="light"] .top-controls button {
+  background: #ffffff !important;
+  border: 2px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
 }
 
 .top-controls .sound-toggle-btn:active,
@@ -206,15 +249,24 @@ body {
   50% { transform: translateY(-4px); }
 }
 
+[data-theme="light"] .app-title {
+  color: #0f172a !important;
+  font-weight: 900 !important;
+}
+[data-theme="light"] .app-subtitle {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
 /* ==========================================================================
    CÁPSULAS DE CINTURONES GLASSMORPHISM (.mode-btn)
-   Diseño Semi-transparente, Centrado y Lujoso
+   Alto Contraste, Líneas Distintivas y Sombras Vivas
    ========================================================================== */
 
 .levels-grid {
   display: flex !important;
   flex-direction: column !important;
-  gap: 0.85rem !important;
+  gap: 0.95rem !important;
   width: 100% !important;
   max-width: 440px !important;
   margin: 0 auto !important;
@@ -227,19 +279,19 @@ body {
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  padding: 0.95rem 1.4rem !important;
-  border-radius: 18px !important;
+  padding: 1.05rem 1.4rem !important;
+  border-radius: 20px !important;
   text-decoration: none !important;
   cursor: pointer !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  border: 1.5px solid var(--border-color) !important;
+  border: 2px solid var(--border-color) !important;
   background: var(--bg-card) !important;
   backdrop-filter: blur(14px) !important;
   -webkit-backdrop-filter: blur(14px) !important;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18) !important;
   overflow: hidden !important;
   width: 100% !important;
-  gap: 0.25rem !important;
+  gap: 0.3rem !important;
 }
 
 .mode-btn:hover {
@@ -268,23 +320,22 @@ body {
 }
 
 .belt-pill-title {
-  font-size: clamp(1.05rem, 3.8vw, 1.22rem) !important;
+  font-size: clamp(1.05rem, 3.8vw, 1.25rem) !important;
   font-weight: 800 !important;
   line-height: 1.2 !important;
   letter-spacing: -0.01em;
 }
 
 .mode-btn .btn-desc {
-  font-size: clamp(0.78rem, 2.8vw, 0.88rem) !important;
+  font-size: clamp(0.8rem, 2.8vw, 0.9rem) !important;
   color: var(--text-muted) !important;
   line-height: 1.35 !important;
-  font-weight: 500 !important;
-  opacity: 0.9 !important;
+  font-weight: 600 !important;
   max-width: 90% !important;
   margin: 0 auto !important;
 }
 
-/* Estado de racha o maestría a la derecha (solo visible cuando hay récord real) */
+/* Estado de racha o maestría */
 .belt-pill-status {
   display: none !important;
 }
@@ -296,8 +347,8 @@ body {
   top: 0.65rem !important;
   right: 0.85rem !important;
   font-size: 0.72rem;
-  font-weight: 700;
-  padding: 0.2rem 0.55rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
   border-radius: 999px;
   background: rgba(245, 158, 11, 0.18);
   border: 1px solid rgba(245, 158, 11, 0.45);
@@ -313,84 +364,193 @@ body {
 }
 
 /* ==========================================================================
-   TEMATIZACIÓN POR NIVEL DE CINTURÓN (Gleam & Tinted Glass)
+   TEMATIZACIÓN POR NIVEL DE CINTURÓN (Líneas distintivas y contrastes)
    ========================================================================== */
 
+/* 1. Cinturón Blanco */
 .btn-blanco {
   --belt-glow: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  border-left: 6px solid #e2e8f0 !important;
   background: linear-gradient(135deg, var(--bg-card) 45%, rgba(255, 255, 255, 0.08) 100%) !important;
 }
 .btn-blanco .belt-pill-title { color: #f8fafc; }
-[data-theme="light"] .btn-blanco {
-  --belt-glow: rgba(148, 163, 184, 0.22);
-  border-color: rgba(148, 163, 184, 0.35) !important;
-  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(241, 245, 249, 0.85) 100%) !important;
-}
-[data-theme="light"] .btn-blanco .belt-pill-title { color: #1e293b; }
 
+[data-theme="light"] .btn-blanco {
+  --belt-glow: rgba(100, 116, 139, 0.18);
+  border: 2px solid #cbd5e1 !important;
+  border-left: 6px solid #64748b !important;
+  background: linear-gradient(135deg, #ffffff 45%, #f1f5f9 100%) !important;
+  box-shadow: 0 4px 16px rgba(100, 116, 139, 0.14) !important;
+}
+[data-theme="light"] .btn-blanco .belt-pill-title { color: #0f172a !important; font-weight: 800 !important; }
+[data-theme="light"] .btn-blanco .btn-desc { color: #334155 !important; font-weight: 600 !important; }
+
+/* 2. Cinturón Naranja */
 .btn-naranja {
   --belt-glow: rgba(249, 115, 22, 0.32);
-  border-color: rgba(249, 115, 22, 0.45) !important;
-  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(249, 115, 22, 0.12) 100%) !important;
+  border-color: rgba(249, 115, 22, 0.55) !important;
+  border-left: 6px solid #f97316 !important;
+  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(249, 115, 22, 0.14) 100%) !important;
 }
 .btn-naranja .belt-pill-title { color: #fb923c; }
-[data-theme="light"] .btn-naranja {
-  border-color: rgba(234, 88, 12, 0.4) !important;
-  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(254, 215, 170, 0.35) 100%) !important;
-}
-[data-theme="light"] .btn-naranja .belt-pill-title { color: #c2410c; }
 
+[data-theme="light"] .btn-naranja {
+  --belt-glow: rgba(234, 88, 12, 0.25);
+  border: 2px solid #f97316 !important;
+  border-left: 6px solid #ea580c !important;
+  background: linear-gradient(135deg, #ffffff 35%, rgba(254, 215, 170, 0.7) 100%) !important;
+  box-shadow: 0 4px 18px rgba(234, 88, 12, 0.2) !important;
+}
+[data-theme="light"] .btn-naranja .belt-pill-title { color: #9a3412 !important; font-weight: 900 !important; }
+[data-theme="light"] .btn-naranja .btn-desc { color: #431407 !important; font-weight: 600 !important; }
+
+/* 3. Cinturón Azul */
 .btn-azul {
   --belt-glow: rgba(14, 165, 233, 0.32);
-  border-color: rgba(14, 165, 233, 0.45) !important;
-  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(14, 165, 233, 0.12) 100%) !important;
+  border-color: rgba(14, 165, 233, 0.55) !important;
+  border-left: 6px solid #0ea5e9 !important;
+  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(14, 165, 233, 0.14) 100%) !important;
 }
 .btn-azul .belt-pill-title { color: #38bdf8; }
-[data-theme="light"] .btn-azul {
-  border-color: rgba(2, 132, 199, 0.4) !important;
-  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(186, 230, 253, 0.35) 100%) !important;
-}
-[data-theme="light"] .btn-azul .belt-pill-title { color: #0369a1; }
 
+[data-theme="light"] .btn-azul {
+  --belt-glow: rgba(2, 132, 199, 0.25);
+  border: 2px solid #0284c7 !important;
+  border-left: 6px solid #0284c7 !important;
+  background: linear-gradient(135deg, #ffffff 35%, rgba(186, 230, 253, 0.7) 100%) !important;
+  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.2) !important;
+}
+[data-theme="light"] .btn-azul .belt-pill-title { color: #0369a1 !important; font-weight: 900 !important; }
+[data-theme="light"] .btn-azul .btn-desc { color: #0c4a6e !important; font-weight: 600 !important; }
+
+/* 4. Cinturón Negro */
 .btn-negro {
   --belt-glow: rgba(168, 85, 247, 0.35);
-  border-color: rgba(168, 85, 247, 0.48) !important;
-  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(168, 85, 247, 0.14) 100%) !important;
+  border-color: rgba(168, 85, 247, 0.55) !important;
+  border-left: 6px solid #a855f7 !important;
+  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(168, 85, 247, 0.16) 100%) !important;
 }
 .btn-negro .belt-pill-title { color: #c084fc; }
+
 [data-theme="light"] .btn-negro {
-  border-color: rgba(124, 58, 237, 0.4) !important;
-  background: linear-gradient(135deg, var(--bg-card) 45%, rgba(233, 213, 255, 0.35) 100%) !important;
+  --belt-glow: rgba(15, 23, 42, 0.3);
+  border: 2px solid #0f172a !important;
+  border-left: 6px solid #7c3aed !important;
+  background: linear-gradient(135deg, #1e293b 20%, #0f172a 100%) !important;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.28) !important;
 }
-[data-theme="light"] .btn-negro .belt-pill-title { color: #6d28d9; }
+[data-theme="light"] .btn-negro .belt-pill-title { color: #ffffff !important; font-weight: 900 !important; }
+[data-theme="light"] .btn-negro .btn-desc { color: #cbd5e1 !important; font-weight: 600 !important; }
 
 /* ==========================================================================
-   BOTONES DE RESPUESTA (.option-btn)
+   PANTALLA DE JUEGO: ENCUADRE DEL PROBLEMA (.problem-container)
+   ========================================================================== */
+
+.problem-container {
+  background: rgba(22, 24, 32, 0.75);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  margin: 0.5rem 0.25rem 0.8rem 0.25rem;
+  padding: 1.2rem 0.6rem;
+}
+
+[data-theme="light"] .problem-container {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 2px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] #problem-display {
+  color: #0f172a !important;
+  text-shadow: none !important;
+  font-weight: 900 !important;
+}
+
+/* ==========================================================================
+   BOTONES DE RESPUESTA (.option-btn Y VARIANTES .opt-c1 ... .opt-c4)
    ========================================================================== */
 
 .option-btn {
   position: relative;
-  background: var(--bg-card) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1.5px solid var(--border-color) !important;
-  border-radius: 16px !important;
-  color: var(--text-main) !important;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 18px !important;
   cursor: pointer;
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease, border-color 0.18s ease !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.5px;
+  min-height: 72px;
 }
 
 .option-btn:hover {
   transform: translateY(-2px);
-  border-color: var(--accent-blue) !important;
-  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.22) !important;
 }
 
 .option-btn:active {
-  transform: scale(0.97) !important;
+  transform: scale(0.95) !important;
 }
+
+/* Modo Oscuro - Botones de respuesta luminosos */
+.opt-c1 {
+  background: linear-gradient(145deg, rgba(22, 24, 32, 0.9), rgba(56, 189, 248, 0.22)) !important;
+  border: 2px solid #38bdf8 !important;
+  color: #f0f9ff !important;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.22) !important;
+}
+.opt-c2 {
+  background: linear-gradient(145deg, rgba(22, 24, 32, 0.9), rgba(244, 63, 94, 0.22)) !important;
+  border: 2px solid #f43f5e !important;
+  color: #fff1f2 !important;
+  box-shadow: 0 4px 16px rgba(244, 63, 94, 0.22) !important;
+}
+.opt-c3 {
+  background: linear-gradient(145deg, rgba(22, 24, 32, 0.9), rgba(251, 191, 36, 0.22)) !important;
+  border: 2px solid #fbbf24 !important;
+  color: #fefce8 !important;
+  box-shadow: 0 4px 16px rgba(251, 191, 36, 0.22) !important;
+}
+.opt-c4 {
+  background: linear-gradient(145deg, rgba(22, 24, 32, 0.9), rgba(16, 185, 129, 0.22)) !important;
+  border: 2px solid #10b981 !important;
+  color: #ecfdf5 !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.22) !important;
+}
+
+/* Modo Claro - Colores VIVOS, nítidos, saturados y con máximo contraste */
+[data-theme="light"] .opt-c1 {
+  background: linear-gradient(145deg, #ffffff 35%, rgba(186, 230, 253, 0.8) 100%) !important;
+  border: 2.5px solid #0284c7 !important;
+  color: #0369a1 !important;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.22) !important;
+}
+[data-theme="light"] .opt-c2 {
+  background: linear-gradient(145deg, #ffffff 35%, rgba(254, 205, 211, 0.8) 100%) !important;
+  border: 2.5px solid #e11d48 !important;
+  color: #be123c !important;
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.22) !important;
+}
+[data-theme="light"] .opt-c3 {
+  background: linear-gradient(145deg, #ffffff 35%, rgba(254, 215, 170, 0.8) 100%) !important;
+  border: 2.5px solid #ea580c !important;
+  color: #9a3412 !important;
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.22) !important;
+}
+[data-theme="light"] .opt-c4 {
+  background: linear-gradient(145deg, #ffffff 35%, rgba(167, 243, 208, 0.8) 100%) !important;
+  border: 2.5px solid #059669 !important;
+  color: #065f46 !important;
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.22) !important;
+}
+
+[data-theme="light"] .opt-c1:hover { box-shadow: 0 8px 24px rgba(2, 132, 199, 0.35) !important; }
+[data-theme="light"] .opt-c2:hover { box-shadow: 0 8px 24px rgba(225, 29, 72, 0.35) !important; }
+[data-theme="light"] .opt-c3:hover { box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35) !important; }
+[data-theme="light"] .opt-c4:hover { box-shadow: 0 8px 24px rgba(5, 150, 105, 0.35) !important; }
 
 .option-btn .key-hint {
   position: absolute;
@@ -401,16 +561,17 @@ body {
   font-weight: 800;
   padding: 2px 5px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.15);
   color: var(--text-muted);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   pointer-events: none;
   line-height: 1;
 }
 
 [data-theme="light"] .option-btn .key-hint {
-  background: rgba(0, 0, 0, 0.06);
-  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #0f172a;
 }
 
 @media (max-width: 500px) {
@@ -420,7 +581,7 @@ body {
 }
 
 /* ==========================================================================
-   MARCADOR Y MEDIDAS (.score-board)
+   MARCADOR Y BOTÓN SALIR (.score-board, .btn-back)
    ========================================================================== */
 
 .score-board {
@@ -437,19 +598,42 @@ body {
   margin-left: 0.3rem;
 }
 
+[data-theme="light"] .score-board {
+  background: #ffffff !important;
+  border: 2px solid #059669 !important;
+  color: #065f46 !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.16) !important;
+}
+[data-theme="light"] .score-board .best-stat {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
 .btn-back {
   background: var(--bg-card) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 10px !important;
+  border: 1.5px solid var(--border-color) !important;
+  border-radius: 12px !important;
   color: var(--text-main) !important;
   cursor: pointer;
+  padding: 0.55rem 0.9rem !important;
+  font-weight: 800 !important;
   transition: all 0.2s ease;
 }
 .btn-back:hover {
   border-color: var(--accent-blue) !important;
-  transform: scale(1.05);
+  transform: translateY(-1px);
+}
+[data-theme="light"] .btn-back {
+  background: #ffffff !important;
+  border: 2px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
+}
+[data-theme="light"] .btn-back:hover {
+  border-color: #0284c7 !important;
+  color: #0284c7 !important;
 }
 
 /* Insignias de récord en tarjetas */
@@ -458,7 +642,7 @@ body {
   align-items: center;
   gap: 0.35rem;
   margin-top: 0.45rem;
-  padding: 0.25rem 0.65rem;
+  padding: 0.28rem 0.7rem;
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 700;
@@ -470,21 +654,35 @@ body {
 }
 
 [data-theme="light"] .card-belt-badge {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
 }
 
 .card-belt-badge.has-streak {
-  background: rgba(245, 158, 11, 0.14);
-  border-color: rgba(245, 158, 11, 0.35);
-  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.14) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  color: #fbbf24 !important;
+}
+[data-theme="light"] .card-belt-badge.has-streak {
+  background: #fef3c7 !important;
+  border-color: #f59e0b !important;
+  color: #b45309 !important;
 }
 
 .card-belt-badge.is-mastered {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(168, 85, 247, 0.25));
-  border-color: rgba(245, 158, 11, 0.6);
-  color: #fef08a;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(168, 85, 247, 0.25)) !important;
+  border-color: rgba(245, 158, 11, 0.6) !important;
+  color: #fef08a !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25) !important;
+}
+[data-theme="light"] .card-belt-badge.is-mastered {
+  background: linear-gradient(135deg, #fef3c7, #f3e8ff) !important;
+  border-color: #d97706 !important;
+  color: #78350f !important;
+  box-shadow: 0 2px 10px rgba(217, 119, 6, 0.2) !important;
 }
 
 /* ==========================================================================
