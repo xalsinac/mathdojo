@@ -1,0 +1,364 @@
+/* ==========================================================================
+   Math Dojo · Estilos Compartidos (ESO / Secundaria)
+   Tipografía Moderna, Control de Audio, Atajos de Teclado, Emblemas y Cápsulas
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap');
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-math: 'JetBrains Mono', 'Plus Jakarta Sans', monospace;
+}
+
+html, body, button, input, select, textarea, h1, h2, h3, p, span, a, .app-title, .app-subtitle, .mode-btn {
+  font-family: var(--font-sans) !important;
+}
+
+/* Tipografía de fórmulas y números */
+.problem-container,
+#problem-display,
+.option-btn,
+.score-board,
+.math-font {
+  font-family: var(--font-math) !important;
+}
+
+/* ==========================================================================
+   CONTROLES SUPERIORES (SONIDO Y TEMA) - NUNCA SE SOLAPAN
+   ========================================================================== */
+
+.top-controls {
+  position: fixed !important;
+  top: max(0.85rem, env(safe-area-inset-top)) !important;
+  right: max(0.85rem, env(safe-area-inset-right)) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+/* Forzar que los botones hijos se comporten como elementos en línea flexibles,
+   anulando cualquier position: absolute declarada localmente en cada archivo HTML */
+.top-controls .sound-toggle-btn,
+.top-controls .theme-toggle-btn,
+.top-controls button {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  flex-shrink: 0 !important;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 0.55rem 0.75rem;
+  font-size: 1.15rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
+  min-width: 42px;
+  min-height: 42px;
+}
+
+.top-controls .sound-toggle-btn:active,
+.top-controls .theme-toggle-btn:active {
+  transform: scale(0.92) !important;
+}
+
+.sound-toggle-btn.is-muted {
+  opacity: 0.65;
+}
+
+/* En la pantalla de juego, asegurar margen derecho amplio para que nunca colisione con el marcador */
+.game-header {
+  padding-right: calc(max(1rem, env(safe-area-inset-right)) + 110px) !important;
+}
+
+/* ==========================================================================
+   EMBLEMAS VECTORIALES DE CADA JUEGO (.app-logo-crest)
+   ========================================================================== */
+
+.app-logo {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto 0.75rem auto !important;
+  background: none !important;
+}
+
+.app-logo-crest {
+  width: clamp(82px, 20vw, 98px);
+  height: clamp(82px, 20vw, 98px);
+  display: block;
+  animation: crestFloat 3.6s ease-in-out infinite;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
+}
+
+@keyframes crestFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ==========================================================================
+   CÁPSULAS DE CINTURONES EMBELLECIDAS (.mode-btn)
+   Diseño Limpio, Centrado y Elegante (Continuidad Sensei del Álgebra)
+   ========================================================================== */
+
+.levels-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.85rem !important;
+  width: 100% !important;
+  max-width: 440px !important;
+  margin: 0 auto !important;
+}
+
+.mode-btn {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 0.95rem 1.4rem !important;
+  border-radius: 18px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border: 2px solid var(--border-color) !important;
+  background: var(--bg-card) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22) !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  gap: 0.25rem !important;
+}
+
+.mode-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 26px var(--belt-glow, rgba(255, 255, 255, 0.16)) !important;
+}
+
+.mode-btn:active {
+  transform: scale(0.97) !important;
+}
+
+/* Ocultar iconos cuadrados y botones redundantes */
+.belt-pill-icon {
+  display: none !important;
+}
+
+/* Cuerpo con título y descripción */
+.belt-pill-body {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.25rem !important;
+  text-align: center !important;
+}
+
+.belt-pill-title {
+  font-size: clamp(1.05rem, 3.8vw, 1.22rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em;
+}
+
+.mode-btn .btn-desc {
+  font-size: clamp(0.78rem, 2.8vw, 0.88rem) !important;
+  color: var(--text-muted) !important;
+  line-height: 1.35 !important;
+  font-weight: 500 !important;
+  opacity: 0.9 !important;
+  max-width: 90% !important;
+  margin: 0 auto !important;
+}
+
+/* Estado de racha o maestría a la derecha (solo visible cuando hay récord real) */
+.belt-pill-status {
+  display: none !important;
+}
+
+.belt-pill-status.has-streak,
+.belt-pill-status.is-mastered {
+  display: inline-flex !important;
+  position: absolute !important;
+  top: 0.65rem !important;
+  right: 0.85rem !important;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
+  white-space: nowrap;
+}
+
+.belt-pill-status.is-mastered {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28), rgba(168, 85, 247, 0.28));
+  border-color: rgba(245, 158, 11, 0.6);
+  color: #fef08a;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+}
+
+/* Tematización por Nivel de Cinturón */
+.btn-blanco {
+  --belt-glow: rgba(248, 250, 252, 0.24);
+  border-color: rgba(226, 232, 240, 0.45) !important;
+  background: linear-gradient(135deg, var(--bg-card) 60%, rgba(226, 232, 240, 0.08) 100%) !important;
+}
+.btn-blanco .belt-pill-title { color: #f8fafc; }
+[data-theme="light"] .btn-blanco .belt-pill-title { color: #1e293b; }
+
+.btn-naranja {
+  --belt-glow: rgba(249, 115, 22, 0.32);
+  border-color: rgba(249, 115, 22, 0.55) !important;
+  background: linear-gradient(135deg, var(--bg-card) 60%, rgba(249, 115, 22, 0.1) 100%) !important;
+}
+.btn-naranja .belt-pill-title { color: #fb923c; }
+
+.btn-azul {
+  --belt-glow: rgba(14, 165, 233, 0.32);
+  border-color: rgba(14, 165, 233, 0.55) !important;
+  background: linear-gradient(135deg, var(--bg-card) 60%, rgba(14, 165, 233, 0.1) 100%) !important;
+}
+.btn-azul .belt-pill-title { color: #38bdf8; }
+
+.btn-negro {
+  --belt-glow: rgba(168, 85, 247, 0.35);
+  border-color: rgba(168, 85, 247, 0.55) !important;
+  background: linear-gradient(135deg, var(--bg-card) 60%, rgba(168, 85, 247, 0.12) 100%) !important;
+}
+.btn-negro .belt-pill-title { color: #c084fc; }
+
+/* ==========================================================================
+   ICONO MATEMÁTICO MATH LAB (CONTINUIDAD CON MATH UNIVERSE)
+   ========================================================================== */
+
+.math-lab-tile {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.28);
+}
+
+.math-lab-tile svg {
+  width: 36px;
+  height: 36px;
+  display: block;
+}
+
+.math-lab-tile .tile-grid {
+  opacity: 0.35;
+  stroke: #60a5fa;
+  stroke-dasharray: 3 4;
+  stroke-width: 1.5;
+}
+
+.math-lab-tile .tile-main {
+  fill: rgba(30, 58, 138, 0.3);
+  stroke: #60a5fa;
+  stroke-width: 3.6;
+}
+
+.math-lab-tile .tile-accent {
+  stroke: #93c5fd;
+  stroke-width: 3;
+}
+
+.math-lab-tile .tile-dot {
+  fill: #bfdbfe;
+  stroke: none;
+}
+
+/* ==========================================================================
+   ATAJOS DE TECLADO (1, 2, 3, 4) E INSIGNIAS DE PORTADA
+   ========================================================================== */
+
+.option-btn {
+  position: relative;
+}
+
+.option-btn .key-hint {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 0.68rem;
+  font-family: var(--font-sans) !important;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+  line-height: 1;
+}
+
+[data-theme="light"] .option-btn .key-hint {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 500px) {
+  .option-btn .key-hint {
+    display: none;
+  }
+}
+
+.card-belt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  transition: all 0.25s ease;
+  z-index: 3;
+}
+
+.card-belt-badge.has-streak {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+.card-belt-badge.is-mastered {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(168, 85, 247, 0.25));
+  border-color: rgba(245, 158, 11, 0.6);
+  color: #fef08a;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+}
+
+.score-board {
+  font-size: clamp(0.95rem, 3.5vw, 1.15rem);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.score-board .best-stat {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-left: 0.3rem;
+}

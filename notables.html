@@ -15,6 +15,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Notables">
   <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="dojo-theme.css">
+  <script src="dojo-audio.js" defer></script>
+  <script src="dojo-stats.js" defer></script>
   
   <style>
     /* ================= VARIABLES DE COLOR ================= */
@@ -238,31 +241,65 @@
 </head>
 <body>
 
-  <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">
-    <span id="theme-icon">☀️</span>
-  </button>
+  <div class="top-controls">
+    <button class="sound-toggle-btn" type="button" onclick="DojoAudio.toggleMute()" aria-label="Silenciar o activar sonido" title="Sonido">
+      <span class="sound-icon">🔊</span>
+    </button>
+    <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">
+      <span id="theme-icon">☀️</span>
+    </button>
+  </div>
 
   <div id="screen-home">
-    <div class="app-logo">⚔️</div>
+    <div class="app-logo">
+      <img src="crests/katana-binomios.svg" class="app-logo-crest" alt="Katana de Binomios">
+    </div>
     <h1 class="app-title">Katana de los Binomios</h1>
     <p class="app-subtitle">Domina los Productos Notables</p>
 
     <div class="levels-grid">
-      <button class="mode-btn btn-blanco" onclick="startGame('iniciado')">
-        Nivel Iniciado
-        <span class="btn-desc">(x + 3)², (x - 2)(x + 2)</span>
+      <button class="mode-btn btn-blanco" data-level="iniciado" onclick="startGame('iniciado')">
+        <div class="belt-pill-icon" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none"><rect x="4" y="8" width="28" height="8" rx="2.5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"/><rect x="4" y="20" width="28" height="8" rx="2.5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="18" cy="18" r="5.5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/><path d="M16 23 L13 33 L19 32 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/><path d="M20 23 L23 33 L17 32 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/></svg>
+        </div>
+        <div class="belt-pill-body">
+          <span class="belt-pill-title">Cinturón Blanco · Iniciado</span>
+          <span class="btn-desc">(x + 3)², (x - 2)(x + 2)</span>
+        </div>
+        <div class="belt-pill-status">🥋 Iniciar</div>
       </button>
-      <button class="mode-btn btn-naranja" onclick="startGame('guerrero')">
-        Nivel Guerrero
-        <span class="btn-desc">Potencias internas: (x² + 5)²</span>
+
+      <button class="mode-btn btn-naranja" data-level="guerrero" onclick="startGame('guerrero')">
+        <div class="belt-pill-icon" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none"><rect x="4" y="8" width="28" height="8" rx="2.5" fill="#f97316" stroke="#ea580c" stroke-width="1.8"/><rect x="4" y="20" width="28" height="8" rx="2.5" fill="#f97316" stroke="#ea580c" stroke-width="1.8"/><circle cx="18" cy="18" r="5.5" fill="#fb923c" stroke="#ea580c" stroke-width="1.8"/><path d="M16 23 L13 33 L19 32 Z" fill="#f97316" stroke="#ea580c" stroke-width="1.2"/><path d="M20 23 L23 33 L17 32 Z" fill="#f97316" stroke="#ea580c" stroke-width="1.2"/></svg>
+        </div>
+        <div class="belt-pill-body">
+          <span class="belt-pill-title">Cinturón Naranja · Guerrero</span>
+          <span class="btn-desc">Potencias internas: (x² + 5)²</span>
+        </div>
+        <div class="belt-pill-status">🥋 Iniciar</div>
       </button>
-      <button class="mode-btn btn-azul" onclick="startGame('samurai')">
-        Nivel Samurái
-        <span class="btn-desc">Raíces y letras mixtas: (√x - 3)²</span>
+
+      <button class="mode-btn btn-azul" data-level="samurai" onclick="startGame('samurai')">
+        <div class="belt-pill-icon" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none"><rect x="4" y="8" width="28" height="8" rx="2.5" fill="#0ea5e9" stroke="#0284c7" stroke-width="1.8"/><rect x="4" y="20" width="28" height="8" rx="2.5" fill="#0ea5e9" stroke="#0284c7" stroke-width="1.8"/><circle cx="18" cy="18" r="5.5" fill="#38bdf8" stroke="#0284c7" stroke-width="1.8"/><path d="M16 23 L13 33 L19 32 Z" fill="#0ea5e9" stroke="#0284c7" stroke-width="1.2"/><path d="M20 23 L23 33 L17 32 Z" fill="#0ea5e9" stroke="#0284c7" stroke-width="1.2"/></svg>
+        </div>
+        <div class="belt-pill-body">
+          <span class="belt-pill-title">Cinturón Azul · Samurái</span>
+          <span class="btn-desc">Raíces y letras mixtas: (√x - 3)²</span>
+        </div>
+        <div class="belt-pill-status">🥋 Iniciar</div>
       </button>
-      <button class="mode-btn btn-negro" onclick="startGame('shogun')">
-        Nivel Shogun
-        <span class="btn-desc">Inversa y Factor Común: 2x² + 12x + 18</span>
+
+      <button class="mode-btn btn-negro" data-level="shogun" onclick="startGame('shogun')">
+        <div class="belt-pill-icon" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none"><rect x="4" y="8" width="28" height="8" rx="2.5" fill="#18181b" stroke="#3f3f46" stroke-width="1.8"/><rect x="4" y="20" width="28" height="8" rx="2.5" fill="#18181b" stroke="#3f3f46" stroke-width="1.8"/><circle cx="18" cy="18" r="5.5" fill="#27272a" stroke="#52525b" stroke-width="1.8"/><path d="M16 23 L13 33 L19 32 Z" fill="#18181b" stroke="#3f3f46" stroke-width="1.2"/><path d="M20 23 L23 33 L17 32 Z" fill="#18181b" stroke="#3f3f46" stroke-width="1.2"/><line x1="14" y1="30" x2="18" y2="29.5" stroke="#fde047" stroke-width="1.5"/></svg>
+        </div>
+        <div class="belt-pill-body">
+          <span class="belt-pill-title">Cinturón Negro · Shogun</span>
+          <span class="btn-desc">Inversa y Factor Común: 2x² + 12x + 18</span>
+        </div>
+        <div class="belt-pill-status">🥋 Iniciar</div>
       </button>
     </div>
   </div>
@@ -270,7 +307,7 @@
   <div id="screen-game">
     <div class="game-header">
       <button class="btn-back" onclick="goHome()">← Salir</button>
-      <div class="score-board">Racha: <span id="score-count">0</span> 🔥</div>
+      <div class="score-board">Racha: <span id="score-count">0</span> 🔥 <span class="best-stat" id="best-count"></span></div>
     </div>
 
     <div class="problem-container">
@@ -427,10 +464,17 @@
 
     const classColors = ['opt-c1', 'opt-c2', 'opt-c3', 'opt-c4'];
 
+    const GAME_ID = 'notables';
+    window.GAME_ID = GAME_ID;
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.DojoStats) DojoStats.syncGameLevels(GAME_ID);
+    });
+
     function startGame(level) {
       currentMode = level;
       racha = 0;
       updateScore();
+      refreshBestDisplay();
       document.getElementById('screen-home').style.display = 'none';
       document.getElementById('screen-game').style.display = 'flex';
       nextProblem();
@@ -438,6 +482,14 @@
 
     function goHome() { window.location.href = 'index.html'; }
     function updateScore() { document.getElementById('score-count').textContent = racha; }
+
+    function refreshBestDisplay() {
+      const best = window.DojoStats ? DojoStats.getBest(GAME_ID, currentMode) : 0;
+      const bestEl = document.getElementById('best-count');
+      if (bestEl) {
+        bestEl.textContent = best > 0 ? `· Récord: ${best}` : '';
+      }
+    }
 
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -469,42 +521,38 @@
 
       for (let i = 0; i < 4; i++) {
         let btn = document.getElementById(`opt-${i}`);
-        btn.innerHTML = optionsArray[i]; 
+        btn.innerHTML = `<span class="key-hint">${i + 1}</span>${optionsArray[i]}`; 
         btn.className = `option-btn ${classColors[i]}`;
       }
     }
 
     function createExplosion(x, y) {
-      // Emojis temáticos que saldrán disparados (puedes cambiarlos)
-      const emojis = ['✨', '🔥', '⭐', '🥋', '💥', '💯'];
-      const numParticles = 12; // Cantidad de partículas por acierto
+      // Emojis temáticos que saldrán disparados
+      const emojis = ['✨', '🔥', '⚔️', '🥋', '💥', '💯'];
+      const numParticles = 12;
 
       for (let i = 0; i < numParticles; i++) {
         let p = document.createElement('div');
         p.className = 'particle';
         p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
         
-        // Posición inicial (centro del botón)
         p.style.left = x + 'px';
         p.style.top = y + 'px';
         document.body.appendChild(p);
 
-        // Matemáticas para dispararlos en círculo
         let angle = Math.random() * Math.PI * 2;
-        let velocity = 60 + Math.random() * 120; // Distancia aleatoria
+        let velocity = 60 + Math.random() * 120;
         let tx = Math.cos(angle) * velocity;
         let ty = Math.sin(angle) * velocity;
-        let rot = Math.random() * 360; // Rotación aleatoria
+        let rot = Math.random() * 360;
 
-        // Forzamos al navegador a pintar el frame inicial antes de moverlos
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             p.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(${Math.random() * 0.8 + 0.5})`;
-            p.style.opacity = '0'; // Se desvanecen
+            p.style.opacity = '0';
           });
         });
 
-        // Limpiar el DOM tras la animación (0.8s)
         setTimeout(() => p.remove(), 800);
       }
     }
@@ -525,13 +573,28 @@
       if (isCorrect) {
         racha++;
         updateScore();
+
+        // Audio y Haptic
+        if (window.DojoAudio) {
+          DojoAudio.play('slash');
+          if (racha % 5 === 0) DojoAudio.play('combo');
+        }
+
+        // Persistencia
+        if (window.DojoStats) {
+          const statRes = DojoStats.recordStreak(GAME_ID, currentMode, racha);
+          if (statRes && statRes.justMastered && window.DojoAudio) {
+            DojoAudio.play('gong');
+          }
+          refreshBestDisplay();
+        }
         
         // Efecto partículas
         const btnElement = document.getElementById(`opt-${btnIndex}`);
         const rect = btnElement.getBoundingClientRect();
         createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
-        // --- NUEVO: Efecto Pantalla Completa y Latido ---
+        // Efecto Pantalla Completa y Latido
         document.body.classList.add('flash-active');
         document.getElementById('problem-display').classList.add('pop-active');
         
@@ -539,14 +602,15 @@
           document.body.classList.remove('flash-active');
           document.getElementById('problem-display').classList.remove('pop-active');
         }, 600);
-        // ------------------------------------------------
 
         setTimeout(() => { nextProblem(); }, 800); 
       } else {
         racha = 0; 
         updateScore();
+
+        if (window.DojoAudio) DojoAudio.play('clash');
         
-        // --- NUEVO: Efecto Pantalla Completa y Temblor (Fallo) ---
+        // Efecto Pantalla Completa y Temblor (Fallo)
         document.body.classList.add('error-active');
         document.getElementById('problem-display').classList.add('shake-active');
         
@@ -554,12 +618,31 @@
           document.body.classList.remove('error-active');
           document.getElementById('problem-display').classList.remove('shake-active');
         }, 500);
-        // ---------------------------------------------------------
         
         document.getElementById('feedback-desc').innerHTML = currentData.exp;
         setTimeout(() => { document.getElementById('feedback-panel').classList.add('show'); }, 300);
       }
     }
+
+    // Soporte teclado físico
+    document.addEventListener('keydown', (e) => {
+      const feedbackPanel = document.getElementById('feedback-panel');
+      if (feedbackPanel && feedbackPanel.classList.contains('show')) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+          e.preventDefault();
+          nextProblem();
+        }
+        return;
+      }
+
+      const gameScreen = document.getElementById('screen-game');
+      if (!gameScreen || gameScreen.style.display !== 'flex' || buttonsDisabled) return;
+
+      if (e.key === '1' || e.key === 'a' || e.key === 'A') checkAnswer(0);
+      else if (e.key === '2' || e.key === 'b' || e.key === 'B') checkAnswer(1);
+      else if (e.key === '3' || e.key === 'c' || e.key === 'C') checkAnswer(2);
+      else if (e.key === '4' || e.key === 'd' || e.key === 'D') checkAnswer(3);
+    });
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

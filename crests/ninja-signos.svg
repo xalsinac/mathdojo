@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <!-- Halo exterior dual: Cian (positivo) y Carmesí (negativo) -->
+    <radialGradient id="signosGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#f43f5e" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0b1120" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ringDual" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="48%" stop-color="#0284c7"/>
+      <stop offset="52%" stop-color="#e11d48"/>
+      <stop offset="100%" stop-color="#fb7185"/>
+    </linearGradient>
+    <linearGradient id="steelPlate" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="25%" stop-color="#cbd5e1"/>
+      <stop offset="50%" stop-color="#ffffff"/>
+      <stop offset="75%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+    <linearGradient id="hoodDark" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="35%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+    <linearGradient id="maskDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#060911"/>
+    </linearGradient>
+    <linearGradient id="goldHilt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <filter id="glowDrop" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Resplandor de Fondo -->
+  <circle cx="60" cy="60" r="56" fill="url(#signosGlow)"/>
+
+  <!-- Anillo Emblema Ninja Dual -->
+  <circle cx="60" cy="60" r="50" stroke="url(#ringDual)" stroke-width="2.5" stroke-dasharray="7 3" opacity="0.85"/>
+  <circle cx="60" cy="60" r="46" fill="#090d16" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+  <!-- Katanas Gemelas Cruzadas a la Espalda -->
+  <!-- Katana Positiva (Izquierda arriba a derecha abajo - Empuñadura Cian) -->
+  <g filter="url(#glowDrop)">
+    <line x1="20" y1="20" x2="38" y2="38" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/>
+    <line x1="22" y1="22" x2="36" y2="36" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/>
+    <!-- Tsuba dorada -->
+    <rect x="34" y="34" width="9" height="5" rx="1.5" transform="rotate(-45 38.5 36.5)" fill="url(#goldHilt)"/>
+    <!-- Hoja de acero pulido -->
+    <line x1="80" y1="80" x2="100" y2="100" stroke="#e2e8f0" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="80" y1="80" x2="98" y2="98" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Katana Negativa (Derecha arriba a izquierda abajo - Empuñadura Carmesí) -->
+  <g filter="url(#glowDrop)">
+    <line x1="100" y1="20" x2="82" y2="38" stroke="#f43f5e" stroke-width="6" stroke-linecap="round"/>
+    <line x1="98" y1="22" x2="84" y2="36" stroke="#be123c" stroke-width="2" stroke-linecap="round"/>
+    <!-- Tsuba dorada -->
+    <rect x="77" y="34" width="9" height="5" rx="1.5" transform="rotate(45 81.5 36.5)" fill="url(#goldHilt)"/>
+    <!-- Hoja de acero pulido -->
+    <line x1="40" y1="80" x2="20" y2="100" stroke="#e2e8f0" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="40" y1="80" x2="22" y2="98" stroke="#f43f5e" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Silueta de la Capucha y Hombros Shinobi -->
+  <path d="M32 98 C32 86 38 80 46 76 C38 72 34 62 34 50 C34 32 44 22 60 22 C76 22 86 32 86 50 C86 62 82 72 74 76 C82 80 88 86 88 98 Z" fill="url(#hoodDark)" filter="url(#glowDrop)"/>
+
+  <!-- Placa Protectora Frontal (Hitai-ate) -->
+  <rect x="40" y="38" width="40" height="13" rx="3.5" fill="url(#steelPlate)" stroke="#1e293b" stroke-width="1"/>
+  <!-- Remaches de fijación -->
+  <circle cx="43" cy="44.5" r="1.2" fill="#0f172a"/>
+  <circle cx="77" cy="44.5" r="1.2" fill="#0f172a"/>
+  
+  <!-- Símbolos Matemáticos Grabados (+ en cian, - en carmesí) como PATHS puras -->
+  <!-- Símbolo MÁS (+) -->
+  <path d="M51 44.5 H57 M54 41.5 V47.5" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M51 44.5 H57 M54 41.5 V47.5" stroke="#38bdf8" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Símbolo MENOS (-) -->
+  <path d="M63 44.5 H69" stroke="#be123c" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M63 44.5 H69" stroke="#fb7185" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Ranura de los Ojos -->
+  <path d="M42 53 C46 51 74 51 78 53 C76 59 70 61 60 61 C50 61 44 59 42 53 Z" fill="#020617"/>
+  <path d="M44 53.5 C48 52.5 72 52.5 76 53.5 C74 58 68 59.5 60 59.5 C52 59.5 46 58 44 53.5 Z" fill="#fde68a" opacity="0.9"/>
+
+  <!-- Ojos Shinobi Intensos -->
+  <path d="M46 55 Q51 53 55 56 Q50 57 46 55 Z" fill="#0f172a"/>
+  <ellipse cx="51.5" cy="55" rx="2" ry="1.8" fill="#38bdf8"/>
+  <circle cx="52" cy="54.4" r="0.7" fill="#ffffff"/>
+
+  <path d="M65 56 Q69 53 74 55 Q70 57 65 56 Z" fill="#0f172a"/>
+  <ellipse cx="68.5" cy="55" rx="2" ry="1.8" fill="#38bdf8"/>
+  <circle cx="68" cy="54.4" r="0.7" fill="#ffffff"/>
+
+  <!-- Máscara Ninja Inferior -->
+  <path d="M38 61 C45 60 75 60 82 61 C84 76 76 86 60 86 C44 86 36 76 38 61 Z" fill="url(#maskDark)" stroke="#1e293b" stroke-width="1.2"/>
+  <path d="M47 69 Q60 74 73 69" stroke="#334155" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <path d="M51 77 Q60 81 69 77" stroke="#334155" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+
+  <!-- Cintas del Lazo Ondeando -->
+  <path d="M38 43 C30 42 22 48 18 57 C24 53 31 51 37 48 Z" fill="#1e293b"/>
+  <path d="M38 46 C28 48 20 58 14 66 C22 61 30 57 36 50 Z" fill="#334155"/>
+</svg>

@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <!-- Halo Magenta / Fucsia del Ronin -->
+    <radialGradient id="roninAuraNew" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.45"/>
+      <stop offset="70%" stop-color="#be185d" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#0b1120" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="kasaStrawGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="30%" stop-color="#d97706"/>
+      <stop offset="75%" stop-color="#92400e"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <linearGradient id="bladeSteelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="45%" stop-color="#f1f5f9"/>
+      <stop offset="80%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+    <linearGradient id="goldTsubaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <filter id="roninFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Aura Resplandeciente -->
+  <circle cx="60" cy="60" r="56" fill="url(#roninAuraNew)"/>
+
+  <!-- Anillo Mon Samurai -->
+  <circle cx="60" cy="60" r="49" stroke="#ec4899" stroke-width="2" stroke-dasharray="6 3" opacity="0.8"/>
+  <circle cx="60" cy="60" r="45" fill="#090d16" stroke="rgba(236,72,153,0.2)" stroke-width="1.2"/>
+
+  <!-- Katanas Gemelas Cruzadas a la Espalda -->
+  <!-- Katana 1 (Diagonal ascendente izquierda a derecha) -->
+  <g filter="url(#roninFilter)">
+    <!-- Hoja de acero pulido y rayo de exponente -->
+    <line x1="22" y1="98" x2="98" y2="22" stroke="url(#bladeSteelGrad)" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="24" y1="96" x2="96" y2="24" stroke="#f472b6" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Tsuba dorada -->
+    <ellipse cx="34" cy="86" rx="6" ry="3" transform="rotate(-45 34 86)" fill="url(#goldTsubaGrad)"/>
+    <!-- Mango Tsuka envuelto -->
+    <line x1="22" y1="98" x2="34" y2="86" stroke="#18181b" stroke-width="6.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Katana 2 (Diagonal ascendente derecha a izquierda) -->
+  <g filter="url(#roninFilter)">
+    <!-- Hoja de acero pulido y rayo de exponente -->
+    <line x1="98" y1="98" x2="22" y2="22" stroke="url(#bladeSteelGrad)" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="96" y1="96" x2="24" y2="24" stroke="#f472b6" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Tsuba dorada -->
+    <ellipse cx="86" cy="86" rx="6" ry="3" transform="rotate(45 86 86)" fill="url(#goldTsubaGrad)"/>
+    <!-- Mango Tsuka envuelto -->
+    <line x1="98" y1="98" x2="86" y2="86" stroke="#18181b" stroke-width="6.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Capa / Haori del Ronin ondeando -->
+  <path d="M42 78 C36 92 28 102 20 106 C36 100 54 98 60 98 C66 98 84 100 100 106 C92 102 84 92 78 78 Z" fill="#0f172a" stroke="#1e293b" stroke-width="1.4"/>
+
+  <!-- Cabeza y Máscara en Sombra -->
+  <path d="M48 62 C48 78 52 86 60 86 C68 86 72 78 72 62 Z" fill="#1e293b"/>
+  <!-- Bufanda / Pañuelo Fucsia que cubre el cuello -->
+  <path d="M46 72 C50 82 70 82 74 72 C70 86 50 86 46 72 Z" fill="#be185d" stroke="#ec4899" stroke-width="1"/>
+
+  <!-- Ojos Brillantes de Ronin en la Penumbra -->
+  <circle cx="53" cy="67" r="2" fill="#f472b6"/>
+  <circle cx="53.5" cy="66.5" r="0.7" fill="#ffffff"/>
+  <circle cx="67" cy="67" r="2" fill="#f472b6"/>
+  <circle cx="66.5" cy="66.5" r="0.7" fill="#ffffff"/>
+
+  <!-- El Gran Sombrero Cónico de Paja (Kasa) -->
+  <g filter="url(#roninFilter)">
+    <!-- Silueta del sombrero triangular curvado -->
+    <path d="M60 26 L106 65 C86 59 34 59 14 65 Z" fill="url(#kasaStrawGrad)" stroke="#78350f" stroke-width="2"/>
+    
+    <!-- Costillas de Bambú tejidas -->
+    <line x1="60" y1="26" x2="26" y2="63" stroke="#b45309" stroke-width="1.2" opacity="0.8"/>
+    <line x1="60" y1="26" x2="43" y2="61" stroke="#b45309" stroke-width="1.2" opacity="0.8"/>
+    <line x1="60" y1="26" x2="60" y2="60" stroke="#b45309" stroke-width="1.2" opacity="0.8"/>
+    <line x1="60" y1="26" x2="77" y2="61" stroke="#b45309" stroke-width="1.2" opacity="0.8"/>
+    <line x1="60" y1="26" x2="94" y2="63" stroke="#b45309" stroke-width="1.2" opacity="0.8"/>
+    
+    <path d="M22 55 Q60 50 98 55" stroke="#78350f" stroke-width="1.4" fill="none"/>
+    <path d="M34 44 Q60 40 86 44" stroke="#78350f" stroke-width="1.4" fill="none"/>
+
+    <!-- Remate superior de bronce / oro -->
+    <circle cx="60" cy="26" r="3.5" fill="url(#goldTsubaGrad)"/>
+  </g>
+
+  <!-- POTENCIA MATEMÁTICA EN PATHS PURAS: xⁿ con destello fucsia -->
+  <g filter="url(#roninFilter)">
+    <!-- Base 'x' trazada en blanco luminoso -->
+    <path d="M52 92 L62 106 M62 92 L52 106" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M52 92 L62 106 M62 92 L52 106" stroke="#f472b6" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- Exponente elevado 'n' trazado en fucsia neón -->
+    <!-- 'n' elevada: dos postes verticales y un arco superior -->
+    <path d="M66 96 V89 C66 87 68 85.5 70.5 85.5 C73 85.5 74 87 74 89 V96" stroke="#ec4899" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M66 96 V89 C66 87 68 85.5 70.5 85.5 C73 85.5 74 87 74 89 V96" stroke="#fdf2f8" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+    <!-- Chispas de Relámpago Exponencial -->
+    <path d="M78 84 L75 88 H79 L76 93" stroke="#fde047" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+</svg>

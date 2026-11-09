@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <!-- Aura Mística de Sensei -->
+    <radialGradient id="senseiAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0.45"/>
+      <stop offset="65%" stop-color="#7e22ce" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0b1120" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ringPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e9d5ff"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#6b21a8"/>
+    </linearGradient>
+    <linearGradient id="giWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#f8fafc"/>
+      <stop offset="85%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <linearGradient id="giInnerShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="beltBlackDan" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#27272a"/>
+      <stop offset="50%" stop-color="#18181b"/>
+      <stop offset="100%" stop-color="#09090b"/>
+    </linearGradient>
+    <linearGradient id="danGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <filter id="senseiShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Aura Resplandeciente -->
+  <circle cx="60" cy="60" r="56" fill="url(#senseiAura)"/>
+
+  <!-- Anillo Círculo Zen Ensō de Gran Maestro -->
+  <circle cx="60" cy="60" r="49" stroke="url(#ringPurple)" stroke-width="2.5" stroke-dasharray="6 3" opacity="0.85"/>
+  <circle cx="60" cy="60" r="45" fill="#090d16" stroke="rgba(168,85,247,0.2)" stroke-width="1.2"/>
+
+  <!-- Destellos de Ki Algebraico en Paths Puras -->
+  <!-- Letra 'x' de energía a la izquierda -->
+  <g opacity="0.85">
+    <path d="M26 40 Q30 46 34 52" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M34 40 Q30 46 26 52" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round"/>
+    <!-- Destello de exponente '²' -->
+    <path d="M36 34 C36 31 39 31 40 33 C41 35 37 38 36 39 H41" stroke="#fde047" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  </g>
+  <!-- Letra 'x' de energía a la derecha -->
+  <g opacity="0.85">
+    <path d="M86 42 Q90 48 94 54" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M94 42 Q90 48 86 54" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Silueta Completa del Kimono / Gi de Gran Maestro -->
+  <g filter="url(#senseiShadow)">
+    <!-- Hombros y Mangas del Gi -->
+    <path d="M36 30 L22 50 L34 60 L44 44 L76 44 L86 60 L98 50 L84 30 C76 25 44 25 36 30 Z" fill="url(#giWhite)"/>
+    
+    <!-- Interior oscuro del cuello / Tsuki -->
+    <path d="M48 28 L60 54 L72 28 Z" fill="#090d16"/>
+
+    <!-- Solapa Derecha (va por dentro, hacia la izquierda del observador) -->
+    <path d="M74 29 L48 76 H38 L66 29 Z" fill="url(#giInnerShadow)"/>
+
+    <!-- Solapa Izquierda Tradicional (cruza por encima, hacia la derecha) -->
+    <path d="M46 29 L72 76 H82 L54 29 Z" fill="url(#giWhite)" stroke="#cbd5e1" stroke-width="0.8"/>
+
+    <!-- Costuras y Pliegues del Uniforme -->
+    <path d="M47 31 L68 70" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M42 56 L34 76 H86 L78 56" fill="url(#giWhite)"/>
+
+    <!-- Nudo del Cinturón Negro de Gran Maestro (Kuro-obi) -->
+    <rect x="36" y="74" width="48" height="9" rx="2" fill="url(#beltBlackDan)" stroke="#3f3f46" stroke-width="1"/>
+    
+    <!-- Nudo Central Cuadrado Tradicional -->
+    <rect x="54" y="72" width="12" height="13" rx="2.5" fill="#18181b" stroke="#3f3f46" stroke-width="1.2"/>
+    <circle cx="60" cy="78.5" r="3" fill="#27272a"/>
+
+    <!-- Caída de las Puntas del Cinturón -->
+    <!-- Extremo Izquierdo del Cinturón con Rayas de Dan Doradas -->
+    <path d="M55 83 L50 102 H58 L61 83 Z" fill="url(#beltBlackDan)"/>
+    <!-- Rayas bordadas de 3er Dan en Oro Puro (Paths puras) -->
+    <rect x="50.8" y="93" width="7" height="1.8" rx="0.4" fill="url(#danGold)"/>
+    <rect x="50.2" y="96.5" width="7.4" height="1.8" rx="0.4" fill="url(#danGold)"/>
+
+    <!-- Extremo Derecho del Cinturón -->
+    <path d="M62 83 L68 100 H60 L58 83 Z" fill="url(#beltBlackDan)"/>
+  </g>
+</svg>

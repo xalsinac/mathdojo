@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <!-- Halo Azul / Dorado del Maestro -->
+    <radialGradient id="scrollHalo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4"/>
+      <stop offset="70%" stop-color="#0284c7" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0b1120" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="parchmentGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="40%" stop-color="#fef3c7"/>
+      <stop offset="85%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="rollerWoodGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#581c87"/>
+      <stop offset="25%" stop-color="#78350f"/>
+      <stop offset="65%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <linearGradient id="goldCapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="45%" stop-color="#facc15"/>
+      <stop offset="100%" stop-color="#a16207"/>
+    </linearGradient>
+    <filter id="scrollShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Aura Resplandeciente -->
+  <circle cx="60" cy="60" r="56" fill="url(#scrollHalo)"/>
+
+  <!-- Anillo Decorativo Mon -->
+  <circle cx="60" cy="60" r="49" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 3" opacity="0.75"/>
+  <circle cx="60" cy="60" r="45" fill="#090d16" stroke="rgba(56,189,248,0.2)" stroke-width="1.2"/>
+
+  <!-- Pergamino Makimono Tradicional -->
+  <g filter="url(#scrollShadow)">
+    <!-- Cuerpo del Pergamino Abierto -->
+    <rect x="23" y="32" width="74" height="56" rx="3.5" fill="url(#parchmentGrad)" stroke="#d97706" stroke-width="1.2"/>
+    
+    <!-- Cenefas Superior e Inferior de Seda Azul Indigo -->
+    <rect x="23" y="32" width="74" height="6.5" rx="1.5" fill="#0284c7"/>
+    <rect x="23" y="81.5" width="74" height="6.5" rx="1.5" fill="#0284c7"/>
+
+    <!-- Varilla / Rodillo de Madera Izquierdo -->
+    <rect x="17" y="24" width="8.5" height="72" rx="4" fill="url(#rollerWoodGrad)" stroke="#451a03" stroke-width="1"/>
+    <circle cx="21.2" cy="24" r="5.5" fill="url(#goldCapGrad)"/>
+    <circle cx="21.2" cy="96" r="5.5" fill="url(#goldCapGrad)"/>
+
+    <!-- Varilla / Rodillo de Madera Derecho -->
+    <rect x="94.5" y="24" width="8.5" height="72" rx="4" fill="url(#rollerWoodGrad)" stroke="#451a03" stroke-width="1"/>
+    <circle cx="98.7" cy="24" r="5.5" fill="url(#goldCapGrad)"/>
+    <circle cx="98.7" cy="96" r="5.5" fill="url(#goldCapGrad)"/>
+
+    <!-- Sello de Cera Rojo Imperial del Dojo (Inkan / Hanko) -->
+    <rect x="68" y="42" width="16" height="16" rx="2.5" fill="#dc2626" stroke="#991b1b" stroke-width="1"/>
+    <!-- Ideograma de Maestría dentro del sello (en trazos blancos puros) -->
+    <path d="M72 46 H80 M76 46 V54 M73 50 H79 M72 55 H80" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- FÓRMULA DEL FACTOR COMÚN DIBUJADA EN PATHS VECTORIALES PURAS: a(x + y) -->
+    <!-- Letra 'a' en trazo shodo negro -->
+    <path d="M37 62 C37 57 41 55 45 55 C49 55 51 57 51 62 V68 M51 61 C49 60 45 60 42 61 C39 62 37 64 37 66 C37 68 39 70 42 70 C46 70 51 68 51 64" stroke="#090d16" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    
+    <!-- Paréntesis Apertura '(' en trazo fluido cian -->
+    <path d="M56 50 C52 57 52 69 56 76" stroke="#0284c7" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+    <!-- Variable 'x' en trazo carmesí -->
+    <path d="M60 56 L68 70 M68 56 L60 70" stroke="#b91c1c" stroke-width="2.4" stroke-linecap="round"/>
+
+    <!-- Signo '+' de suma -->
+    <path d="M72 63 H78 M75 60 V66" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round"/>
+
+    <!-- Paréntesis Cierre ')' en trazo fluido cian -->
+    <path d="M82 50 C86 57 86 69 82 76" stroke="#0284c7" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+    <!-- Cordón de Seda de Cierre con Borla Dorada -->
+    <path d="M21 60 C12 63 9 74 15 80 C19 84 24 80 20 72" stroke="#ea580c" stroke-width="2.2" fill="none"/>
+    <circle cx="15" cy="80" r="3.2" fill="url(#goldCapGrad)"/>
+  </g>
+</svg>

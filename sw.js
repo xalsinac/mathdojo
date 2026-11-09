@@ -1,4 +1,4 @@
-const CACHE_NAME = 'math-dojo-v7'; // Sube este número si haces cambios gigantes
+const CACHE_NAME = 'math-dojo-v10'; // Emblemas en vectores puros y cápsulas de cinturón centradas
 
 const ASSETS_TO_CACHE = [
   './',
@@ -7,9 +7,21 @@ const ASSETS_TO_CACHE = [
   './algebra.html',
   './notables.html',
   './factor.html',
+  './ronin.html',
   './balanza.html',
   './fracciones.html',
   './rectas.html',
+  './dojo-audio.js',
+  './dojo-stats.js',
+  './dojo-theme.css',
+  './crests/sensei-algebra.svg',
+  './crests/ninja-signos.svg',
+  './crests/katana-binomios.svg',
+  './crests/maestro-factor.svg',
+  './crests/ronin-potencias.svg',
+  './crests/balanza-monje.svg',
+  './crests/shuriken-fracciones.svg',
+  './crests/dragon-rectas.svg',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'
@@ -38,19 +50,17 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// NUEVA ESTRATEGIA: "Network First" (Red primero, caché después)
+// ESTRATEGIA: Network First (Red primero con fallback a caché offline)
 self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
       .then(networkResponse => {
-        // Si hay internet y responde bien, actualizamos la caché "en silencio" con la versión nueva
         return caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, networkResponse.clone());
           return networkResponse;
         });
       })
       .catch(() => {
-        // Si falla (estamos offline), sacamos la versión de la caché
         return caches.match(event.request);
       })
   );

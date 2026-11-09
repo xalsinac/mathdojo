@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <radialGradient id="balanzaGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#b45309" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldBeam" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="50" cy="50" r="48" fill="url(#balanzaGlow)"/>
+
+  <!-- Sello Mon Zen -->
+  <circle cx="50" cy="50" r="42" fill="#0f172a" stroke="#f59e0b" stroke-width="3"/>
+  <circle cx="50" cy="50" r="37" stroke="rgba(245, 158, 11, 0.25)" stroke-width="1.2"/>
+
+  <!-- Pilar Central y Pivote de Equilibrio -->
+  <path d="M50 24 V76" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M40 76 H60" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="50" cy="34" r="5" fill="#fde047" stroke="#b45309" stroke-width="2"/>
+
+  <!-- Brazo de la Balanza en Equilibrio Horizontal (Ecuación igualada) -->
+  <path d="M22 34 H78" stroke="url(#goldBeam)" stroke-width="4" stroke-linecap="round" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.5))"/>
+
+  <!-- Platillo Izquierdo (con incógnita X) -->
+  <path d="M22 34 L15 54 M22 34 L29 54" stroke="#cbd5e1" stroke-width="1.5"/>
+  <path d="M12 54 C12 60 32 60 32 54 Z" fill="url(#goldBeam)"/>
+  <circle cx="22" cy="49" r="4.5" fill="#38bdf8" filter="drop-shadow(0 0 6px #38bdf8)"/>
+
+  <!-- Platillo Derecho (con valor numérico en equilibrio) -->
+  <path d="M78 34 L71 54 M78 34 L85 54" stroke="#cbd5e1" stroke-width="1.5"/>
+  <path d="M68 54 C68 60 88 60 88 54 Z" fill="url(#goldBeam)"/>
+  <circle cx="78" cy="49" r="4.5" fill="#10b981" filter="drop-shadow(0 0 6px #10b981)"/>
+
+  <!-- Símbolo de Igualdad (=) Central -->
+  <line x1="46" y1="58" x2="54" y2="58" stroke="#fde047" stroke-width="2" stroke-linecap="round"/>
+  <line x1="46" y1="63" x2="54" y2="63" stroke="#fde047" stroke-width="2" stroke-linecap="round"/>
+</svg>
