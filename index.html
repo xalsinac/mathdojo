@@ -2,10 +2,19 @@
 <html lang="es">
 <head>
   <script>
-    let initialTheme = localStorage.getItem('mathdojo_theme') || localStorage.getItem('mathlab_theme') || localStorage.getItem('math-universe-theme');
-    if (initialTheme === 'light') {
-      document.documentElement.setAttribute('data-theme', 'light');
-    }
+    try {
+      const p = new URLSearchParams(window.location.search).get('theme');
+      const s = p || localStorage.getItem('math-universe-theme') || localStorage.getItem('mathlab_theme') || localStorage.getItem('mathdojo_theme');
+      const t = s === 'light' ? 'light' : 'dark';
+      if (t === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+      localStorage.setItem('math-universe-theme', t);
+      localStorage.setItem('mathlab_theme', t);
+      localStorage.setItem('mathdojo_theme', t);
+    } catch (_) {}
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -533,11 +542,35 @@
   </div>
 
   <script>
+    function updateCrossLinks(theme) {
+      try {
+        document.querySelectorAll('a[href]').forEach(a => {
+          const href = a.getAttribute('href');
+          if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:')) return;
+          try {
+            const url = new URL(href, window.location.href);
+            if (url.origin === window.location.origin || url.hostname.includes('vercel.app')) {
+              url.searchParams.set('theme', theme);
+              if (url.origin === window.location.origin && !href.startsWith('http')) {
+                const relativePath = href.split('?')[0].split('#')[0];
+                const hash = href.includes('#') ? '#' + href.split('#')[1] : '';
+                a.setAttribute('href', `${relativePath}?theme=${theme}${hash}`);
+              } else {
+                a.setAttribute('href', url.toString());
+              }
+            }
+          } catch (_) {}
+        });
+      } catch (_) {}
+    }
+
     function initTheme() {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       const icon = document.getElementById('theme-icon');
       if (icon) icon.textContent = isLight ? '🌙' : '☀️';
+      updateCrossLinks(isLight ? 'light' : 'dark');
     }
+
     function toggleTheme() {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       const next = isLight ? 'dark' : 'light';
@@ -551,11 +584,26 @@
         if (icon) icon.textContent = '☀️';
       }
       try {
-        localStorage.setItem('mathdojo_theme', next);
-        localStorage.setItem('mathlab_theme', next);
         localStorage.setItem('math-universe-theme', next);
+        localStorage.setItem('mathlab_theme', next);
+        localStorage.setItem('mathdojo_theme', next);
       } catch (_) {}
+      updateCrossLinks(next);
     }
+
+    window.addEventListener('pageshow', () => {
+      try {
+        const s = localStorage.getItem('math-universe-theme') || localStorage.getItem('mathlab_theme') || localStorage.getItem('mathdojo_theme');
+        const isLight = s === 'light';
+        if (isLight) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+        initTheme();
+      } catch (_) {}
+    });
+
     window.addEventListener('DOMContentLoaded', initTheme);
     
     if ('serviceWorker' in navigator) {
