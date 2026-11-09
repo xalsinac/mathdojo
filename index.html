@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <script>
-    let initialTheme = localStorage.getItem('mathdojo_theme') || localStorage.getItem('mathlab_theme');
+    let initialTheme = localStorage.getItem('mathdojo_theme') || localStorage.getItem('mathlab_theme') || localStorage.getItem('math-universe-theme');
     if (initialTheme === 'light') {
       document.documentElement.setAttribute('data-theme', 'light');
     }
@@ -10,42 +10,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Math Dojo | Centro de Entrenamiento de Cálculo</title>
-  <meta name="theme-color" content="#0b1120">
+  <meta name="theme-color" content="#101116">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Math Dojo">
   <link rel="manifest" href="manifest.json">
   
   <link rel="stylesheet" href="dojo-theme.css">
+  <script src="dojo-starfield.js" defer></script>
   <script src="dojo-audio.js" defer></script>
   <script src="dojo-stats.js" defer></script>
   
   <style>
     :root {
-      --bg-primary: #0b1120;
-      --bg-card: #0f172a;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-color: #1e293b;
+      --bg-primary: #101116;
+      --bg-card: rgba(22, 24, 32, 0.82);
+      --text-main: #f3f2ec;
+      --text-muted: #9497a6;
+      --border-color: rgba(255, 255, 255, 0.12);
     }
     [data-theme="light"] {
-      --bg-primary: #f8fafc;
-      --bg-card: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --border-color: #e2e8f0;
+      --bg-primary: #f5f4ef;
+      --bg-card: rgba(255, 255, 255, 0.86);
+      --text-main: #14151a;
+      --text-muted: #5d6170;
+      --border-color: rgba(0, 0, 0, 0.08);
     }
     * { box-sizing: border-box; }
     
     body {
       margin: 0; padding: 0;
-      background-color: var(--bg-primary); color: var(--text-main);
+      background-color: var(--bg-primary); 
+      color: var(--text-main);
       min-height: 100vh;
       display: flex; flex-direction: column; align-items: center;
       overflow-x: hidden;
       overflow-y: auto;
-      transition: background-color 0.3s, color 0.3s;
-      padding-bottom: max(2rem, env(safe-area-inset-bottom));
+      transition: background-color 0.3s ease, color 0.3s ease;
+      padding-bottom: max(3rem, env(safe-area-inset-bottom));
     }
 
     .header {
@@ -53,34 +55,13 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      margin-top: max(3.5rem, env(safe-area-inset-top));
-      margin-bottom: 1.8rem;
+      margin-top: max(3.8rem, env(safe-area-inset-top));
+      margin-bottom: 2rem;
       padding: 0 1.2rem;
       max-width: 540px;
       width: 94%;
-    }
-
-    .constellation-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.35rem 0.85rem;
-      border-radius: 999px;
-      background: rgba(99, 102, 241, 0.12);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: #818cf8;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 0.8rem;
-      text-decoration: none;
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-    }
-    .constellation-pill:hover {
-      background: rgba(99, 102, 241, 0.22);
-      border-color: rgba(99, 102, 241, 0.55);
-      transform: translateY(-1px);
+      position: relative;
+      z-index: 2;
     }
 
     .header-main-row {
@@ -98,12 +79,13 @@
       object-fit: contain;
       flex-shrink: 0;
       display: block;
-      filter: drop-shadow(0 8px 16px rgba(168, 85, 247, 0.25));
+      filter: drop-shadow(0 8px 18px rgba(168, 85, 247, 0.35));
       mix-blend-mode: screen; 
+      transition: transform 0.3s ease;
     }
     [data-theme="light"] .header-tori {
       mix-blend-mode: multiply;
-      filter: none;
+      filter: drop-shadow(0 6px 14px rgba(168, 85, 247, 0.15));
     }
 
     .header-text {
@@ -119,6 +101,14 @@
       font-weight: 900; 
       letter-spacing: -1px; 
       line-height: 1.1;
+      background: linear-gradient(135deg, var(--text-main) 60%, var(--accent-blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    [data-theme="light"] .header h1 {
+      background: linear-gradient(135deg, #14151a 50%, #0284c7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     .header p { 
       color: var(--text-muted); 
@@ -132,16 +122,21 @@
     .games-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.85rem;
+      gap: 0.95rem;
       width: 94%;
       max-width: 540px;
+      position: relative;
+      z-index: 2;
     }
+
     .game-card {
-      background-color: var(--bg-card);
-      border: 2px solid var(--border-color);
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid var(--border-color);
       border-radius: 20px;
       padding: 1.25rem 0.85rem;
-      min-height: 155px;
+      min-height: 160px;
       text-decoration: none;
       display: flex;
       flex-direction: column;
@@ -149,18 +144,18 @@
       text-align: center;
       justify-content: space-between;
       gap: 0.35rem;
-      transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
       color: var(--text-main);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
       position: relative;
       overflow: hidden; 
     }
     .game-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px var(--card-glow, rgba(0, 0, 0, 0.35));
     }
     .game-card:active { 
-      transform: scale(0.96); 
+      transform: scale(0.97); 
     }
 
     .game-info {
@@ -192,10 +187,10 @@
       object-position: center 25%;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.22;
+      opacity: 0.24;
       filter: invert(1) grayscale(1);
       mix-blend-mode: screen;
-      transition: transform 0.25s ease, opacity 0.25s ease;
+      transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
     [data-theme="light"] .card-full-bg {
@@ -204,63 +199,207 @@
       mix-blend-mode: multiply;
     }
 
-    .game-card:active .card-full-bg,
     .game-card:hover .card-full-bg {
       transform: scale(1.08);
-      opacity: 0.32;
+      opacity: 0.34;
+    }
+    [data-theme="light"] .game-card:hover .card-full-bg {
+      opacity: 0.18;
     }
 
-    /* TARJETA ESPECIAL (ANCHO COMPLETO) */
+    /* COLORES TEMÁTICOS CON TINTADO LUMINOSO Y CRISTALINO */
+    .card-enteros { 
+      --card-glow: rgba(56, 189, 248, 0.32);
+      border-color: rgba(56, 189, 248, 0.45); 
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(56, 189, 248, 0.12) 100%);
+    }
+    .card-enteros h2 { color: #38bdf8; }
+    [data-theme="light"] .card-enteros {
+      border-color: rgba(2, 132, 199, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(186, 230, 253, 0.4) 100%);
+    }
+    [data-theme="light"] .card-enteros h2 { color: #0284c7; }
+    
+    .card-algebra { 
+      --card-glow: rgba(168, 85, 247, 0.32);
+      border-color: rgba(168, 85, 247, 0.45); 
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(168, 85, 247, 0.12) 100%);
+    }
+    .card-algebra h2 { color: #a855f7; }
+    [data-theme="light"] .card-algebra {
+      border-color: rgba(124, 58, 237, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(233, 213, 255, 0.4) 100%);
+    }
+    [data-theme="light"] .card-algebra h2 { color: #7c3aed; }
+
+    .card-notables { 
+      --card-glow: rgba(244, 63, 94, 0.32);
+      border-color: rgba(244, 63, 94, 0.45); 
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(244, 63, 94, 0.12) 100%);
+    }
+    .card-notables h2 { color: #f43f5e; }
+    [data-theme="light"] .card-notables {
+      border-color: rgba(225, 29, 72, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(254, 205, 211, 0.4) 100%);
+    }
+    [data-theme="light"] .card-notables h2 { color: #e11d48; }
+
+    .card-factor { 
+      --card-glow: rgba(14, 165, 233, 0.32);
+      border-color: rgba(14, 165, 233, 0.45); 
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(14, 165, 233, 0.12) 100%);
+    }
+    .card-factor h2 { color: #0ea5e9; }
+    [data-theme="light"] .card-factor {
+      border-color: rgba(2, 132, 199, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(186, 230, 253, 0.4) 100%);
+    }
+    [data-theme="light"] .card-factor h2 { color: #0284c7; }
+
+    .card-ronin { 
+      --card-glow: rgba(236, 72, 153, 0.32);
+      border-color: rgba(236, 72, 153, 0.45); 
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(236, 72, 153, 0.12) 100%);
+    }
+    .card-ronin h2 { color: #ec4899; }
+    [data-theme="light"] .card-ronin {
+      border-color: rgba(219, 39, 119, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(251, 207, 232, 0.4) 100%);
+    }
+    [data-theme="light"] .card-ronin h2 { color: #db2777; }
+
+    .card-balanza { 
+      --card-glow: rgba(245, 158, 11, 0.32);
+      border-color: rgba(245, 158, 11, 0.45); 
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(245, 158, 11, 0.12) 100%);
+    }
+    .card-balanza h2 { color: #f59e0b; }
+    [data-theme="light"] .card-balanza {
+      border-color: rgba(217, 119, 6, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(254, 215, 170, 0.4) 100%);
+    }
+    [data-theme="light"] .card-balanza h2 { color: #d97706; }
+
+    .card-fracciones { 
+      --card-glow: rgba(6, 182, 212, 0.32);
+      border-color: rgba(6, 182, 212, 0.45); 
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(6, 182, 212, 0.12) 100%);
+    }
+    .card-fracciones h2 { color: #06b6d4; }
+    [data-theme="light"] .card-fracciones {
+      border-color: rgba(8, 145, 178, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(207, 250, 254, 0.4) 100%);
+    }
+    [data-theme="light"] .card-fracciones h2 { color: #0891b2; }
+
+    .card-rectas { 
+      --card-glow: rgba(16, 185, 129, 0.32);
+      border-color: rgba(16, 185, 129, 0.45); 
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(16, 185, 129, 0.12) 100%);
+    }
+    .card-rectas h2 { color: #10b981; }
+    [data-theme="light"] .card-rectas {
+      border-color: rgba(5, 150, 105, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 45%, rgba(209, 250, 229, 0.4) 100%);
+    }
+    [data-theme="light"] .card-rectas h2 { color: #059669; }
+
+    /* TARJETA ESPECIAL: ACADEMIA MATH LAB */
     .promo-card {
       grid-column: 1 / -1;
       flex-direction: row;
       text-align: left;
-      padding: 1.4rem 1.5rem;
-      background: linear-gradient(145deg, var(--bg-card) 30%, rgba(168, 85, 247, 0.14) 100%);
-      border-color: rgba(168, 85, 247, 0.5);
-      border-radius: 24px;
+      padding: 1.3rem 1.4rem;
+      background: linear-gradient(145deg, var(--bg-card) 35%, rgba(59, 130, 246, 0.14) 100%);
+      border-color: rgba(96, 165, 250, 0.45);
+      border-radius: 22px;
       justify-content: flex-start;
       gap: 1.2rem;
-      margin-top: 0.5rem;
+      margin-top: 0.4rem;
+      --card-glow: rgba(59, 130, 246, 0.3);
     }
-    .promo-card .game-icon {
-      font-size: 2.8rem;
-      line-height: 1;
+    [data-theme="light"] .promo-card {
+      border-color: rgba(37, 99, 235, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 40%, rgba(219, 234, 254, 0.5) 100%);
     }
     .promo-card .game-info p {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       margin-top: 0.3rem;
       line-height: 1.35;
     }
 
-    /* Colores temáticos */
-    .card-enteros { border-color: rgba(56, 189, 248, 0.4); }
-    .card-enteros h2 { color: #38bdf8; }
-    
-    .card-algebra { border-color: rgba(168, 85, 247, 0.4); }
-    .card-algebra h2 { color: #a855f7; }
-
-    .card-notables { border-color: rgba(225, 29, 72, 0.4); }
-    .card-notables h2 { color: #f43f5e; }
-
-    .card-factor { border-color: rgba(14, 165, 233, 0.4); }
-    .card-factor h2 { color: #0ea5e9; }
-
-    .card-ronin { border-color: rgba(236, 72, 153, 0.4); }
-    .card-ronin h2 { color: #ec4899; }
-
-    .card-balanza { border-color: rgba(245, 158, 11, 0.4); }
-    .card-balanza h2 { color: #f59e0b; }
-
-    .card-fracciones { border-color: rgba(6, 182, 212, 0.4); }
-    .card-fracciones h2 { color: #06b6d4; }
-
-    .card-rectas { border-color: rgba(16, 185, 129, 0.4); }
-    .card-rectas h2 { color: #10b981; }
+    /* GRAN PASTILLA / SECCIÓN CONSTELACIÓN MATH UNIVERSE (ABAJO DEL TODO) */
+    .constellation-hub-card {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      text-align: left;
+      padding: 1.3rem 1.4rem;
+      background: linear-gradient(145deg, var(--bg-card) 35%, rgba(168, 85, 247, 0.14) 100%);
+      border-color: rgba(168, 85, 247, 0.45);
+      border-radius: 22px;
+      justify-content: flex-start;
+      gap: 1.2rem;
+      margin-top: 0.2rem;
+      --card-glow: rgba(168, 85, 247, 0.3);
+    }
+    [data-theme="light"] .constellation-hub-card {
+      border-color: rgba(124, 58, 237, 0.35);
+      background: linear-gradient(145deg, var(--bg-card) 40%, rgba(243, 232, 255, 0.55) 100%);
+    }
+    .constellation-icon-wrap {
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background: rgba(168, 85, 247, 0.14);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      color: #c084fc;
+      font-size: 1.5rem;
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.25);
+    }
+    [data-theme="light"] .constellation-icon-wrap {
+      background: rgba(124, 58, 237, 0.12);
+      border-color: rgba(124, 58, 237, 0.3);
+      color: #7c3aed;
+    }
+    .constellation-hub-card .badge-hub {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(168, 85, 247, 0.18);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      color: #c084fc;
+      margin-bottom: 0.3rem;
+    }
+    [data-theme="light"] .constellation-hub-card .badge-hub {
+      background: rgba(124, 58, 237, 0.1);
+      border-color: rgba(124, 58, 237, 0.3);
+      color: #6d28d9;
+    }
+    .constellation-hub-card h2 {
+      color: #c084fc;
+    }
+    [data-theme="light"] .constellation-hub-card h2 {
+      color: #6d28d9;
+    }
+    .constellation-hub-card .game-info p {
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      line-height: 1.35;
+    }
   </style>
 </head>
 <body>
-  <!-- Controles Superiores: Sonido y Tema -->
+  <!-- Controles Superiores: Sonido y Tema (Alineados, nunca solapados) -->
   <div class="top-controls">
     <button class="sound-toggle-btn" type="button" onclick="DojoAudio.toggleMute()" aria-label="Silenciar o activar sonido" title="Sonido">
       <span class="sound-icon">🔊</span>
@@ -271,7 +410,6 @@
   </div>
 
   <div class="header">
-    <a href="https://mathuniverse-beta.vercel.app/" target="_blank" rel="noopener noreferrer" class="constellation-pill" title="Visitar Math Universe">🚀 Constelación Math Universe ↗</a>
     <div class="header-main-row">
       <img src="Tori.png" class="header-tori" alt="Tori">
       <div class="header-text">
@@ -380,26 +518,43 @@
         <p>Amplía tus conocimientos con lecciones interactivas, teoría visual y explicaciones paso a paso de cada tema de la ESO.</p>
       </div>
     </a>
+
+    <!-- Gran Pastilla: Constelación Math Universe (Abajo, sin estorbar el header) -->
+    <a href="https://mathuniverse-beta.vercel.app/" target="_blank" rel="noopener noreferrer" class="game-card constellation-hub-card" onclick="if(window.DojoAudio) DojoAudio.play('tap')">
+      <div class="constellation-icon-wrap" aria-hidden="true">
+        <span>✦</span>
+      </div>
+      <div class="game-info">
+        <div class="badge-hub">Constelación</div>
+        <h2>Portal Math Universe ↗</h2>
+        <p>Centro neurálgico: graficadora avanzada, dojo de cálculo, fórmulas y selectividad paso a paso.</p>
+      </div>
+    </a>
   </div>
 
   <script>
     function initTheme() {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = isLight ? '🌙' : '☀️';
     }
     function toggleTheme() {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      if (isLight) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('mathdojo_theme', 'dark');
-        localStorage.setItem('mathlab_theme', 'dark');
-        document.getElementById('theme-icon').textContent = '☀️';
-      } else {
+      const next = isLight ? 'dark' : 'light';
+      const icon = document.getElementById('theme-icon');
+      
+      if (next === 'light') {
         document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('mathdojo_theme', 'light');
-        localStorage.setItem('mathlab_theme', 'light');
-        document.getElementById('theme-icon').textContent = '🌙';
+        if (icon) icon.textContent = '🌙';
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        if (icon) icon.textContent = '☀️';
       }
+      try {
+        localStorage.setItem('mathdojo_theme', next);
+        localStorage.setItem('mathlab_theme', next);
+        localStorage.setItem('math-universe-theme', next);
+      } catch (_) {}
     }
     window.addEventListener('DOMContentLoaded', initTheme);
     
